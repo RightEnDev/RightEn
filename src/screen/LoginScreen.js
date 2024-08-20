@@ -5,11 +5,11 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, ImageBackground, Button, Image, Alert, StyleSheet, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 import qs from 'qs';
-const LOGO = require('./assets/images/logo_png.png');
-const image_background = require('./assets/images/form_background.png');
+const LOGO = require('../../assets/images/logo_png.png');
+const image_background = require('../../assets/images/form_background.png');
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SvgXml } from 'react-native-svg';
-import { mobile_svg, passwordsvg, eye, eyeoff } from './assets/ALLSVG';
+import { mobile_svg, passwordsvg, eye, eyeoff } from '../../assets/ALLSVG';
 
 const LoginScreen = () => {
   const [Mobile, setMobile] = useState('');
@@ -77,7 +77,6 @@ const LoginScreen = () => {
           <Text style={styles.title}>Login</Text>
 
           <View style={styles.passwordContainer}>
-            {/* <FontAwesome5 name="mobile-alt" size={24} color="#FFCB0A" /> */}
             <SvgXml xml={mobile_svg} />
 
 
