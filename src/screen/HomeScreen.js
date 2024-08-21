@@ -58,7 +58,7 @@ import axios from 'axios';
 
 const { width } = Dimensions.get('window');
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -92,7 +92,8 @@ const HomeScreen = () => {
 
   if (error) {
     return (
-      <View style={styles.container}>
+      <View style={styles.container}
+      >
         <Text>Error: {error}</Text>
       </View>
     );
@@ -100,7 +101,17 @@ const HomeScreen = () => {
   const renderItem = ({ item }) => {
     return (
       item.status === "1" && item.app_icon != null ? (
-        <View style={styles.service_box}>
+        <View style={styles.service_box}
+          onStartShouldSetResponder={() => true}
+          onResponderGrant={() => {
+            console.log(item.service_code);
+            navigation.navigate('Details', { 
+              "service_code": item.service_code, 
+            });
+            
+
+          }}
+        >
           <Image
             source={{ uri: `https://righten.in/public/app/assets/img/service_icon/${item.app_icon}` }}
             style={styles.service_image}
@@ -118,7 +129,7 @@ const HomeScreen = () => {
         backgroundColor="#CFF7FF"
       />
 
-      <View style={{marginTop:30}}>
+      <View style={{ marginTop: 30 }}>
         <FlatList
           data={data}
           renderItem={renderItem}

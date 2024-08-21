@@ -16,7 +16,7 @@ const Splash = ({ navigation }) => {
             else {
                 navigation.navigate('LoginScreen');
             }
-        }, 2000);
+        }, 1000);
     }, []);
     return (
         <View style={styles.container}>

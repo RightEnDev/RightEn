@@ -10,8 +10,9 @@ const image_background = require('../../assets/images/form_background.png');
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SvgXml } from 'react-native-svg';
 import { mobile_svg, passwordsvg, eye, eyeoff } from '../../assets/ALLSVG';
+import Toast from 'react-native-toast-message';
 
-const LoginScreen = () => {
+const LoginScreen = ({ navigation }) => {
   const [Mobile, setMobile] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -20,6 +21,24 @@ const LoginScreen = () => {
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
+  const showSuccessToast = () => {
+    Toast.show({
+      type: 'success',
+      text1: 'Hello 👋',
+      text2: 'You are successfully logged in !',
+
+    });
+  };
+  const showErrorToast = () => {
+    Toast.show({
+      type: 'error',
+      text1: 'Oops! 😔',
+      text2: 'Something went wrong. Please try again.',
+      // position: 'top', // or 'bottom'
+
+    });
+  };
+
 
   const validateInput = () => {
     if (Mobile.length !== 10) {
@@ -53,14 +72,19 @@ const LoginScreen = () => {
       if (response.data.data.status) {
         await AsyncStorage.setItem('userEmail', response.data.data.email);
         await AsyncStorage.setItem('userPassword', password);
+        showSuccessToast();
+        setTimeout(() => {
+          navigation.navigate('Home');
+        }, 2000); // 2000 milliseconds = 2 seconds
 
-        Alert.alert('Login Successful', 'You are now logged in.');
+        // Alert.alert('Login Successful', 'You are now logged in.');
 
       } else {
-        Alert.alert('Login Failed', 'Invalid mobile number or password.');
+        showErrorToast();
       }
     } catch (error) {
-      Alert.alert('Error', 'Something went wrong. Please try again later.');
+      showErrorToast();
+      // Alert.alert('Error', 'Something went wrong. Please try again later.');
     }
   };
 
@@ -70,9 +94,23 @@ const LoginScreen = () => {
       style={styles.backgroundImage}
       resizeMode="cover"
     >
+      <View
+        style={{
+          position: 'relative',
+          zIndex: 10, // Ensure the toast is on top
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+        }}
+      >
+        <Toast />
+      </View>
+{/* <Toast /> */}
       <View style={styles.container}>
         <View style={styles.inner_container}>
           <Image source={LOGO} style={styles.logo_image} />
+          {/* <Button title="Show toast" onPress={showSuccessToast} /> */}
 
           <Text style={styles.title}>Login</Text>
 
@@ -83,7 +121,7 @@ const LoginScreen = () => {
             <TextInput
               style={[styles.input, { flex: 1 }]}
               placeholder="Mobile No"
-              placeholderTextColor="#000000" 
+              placeholderTextColor="#000000"
               keyboardType="numeric"
               value={Mobile}
               onChangeText={setMobile}
@@ -97,7 +135,7 @@ const LoginScreen = () => {
 
             <TextInput
               style={[styles.input, { flex: 1 }]}
-              placeholderTextColor="#000000" 
+              placeholderTextColor="#000000"
               placeholder="Password"
               secureTextEntry={!isPasswordVisible}
               value={password}
@@ -105,8 +143,8 @@ const LoginScreen = () => {
             />
             <TouchableOpacity onPress={togglePasswordVisibility}>
               <SvgXml
-                xml={isPasswordVisible ? eyeoff 
-                  : eye 
+                xml={isPasswordVisible ? eyeoff
+                  : eye
                 }
                 size={30}
                 color="#FFCB0A"
@@ -182,7 +220,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     paddingHorizontal: 10,
     marginLeft: 10,
-    color: '#000000', 
+    color: '#000000',
   },
   login_buton: {
     marginTop: 10,

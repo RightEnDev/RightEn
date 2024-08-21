@@ -5,6 +5,7 @@ import Example2 from '../screen/Example2';
 import { TouchableOpacity, View, Text } from 'react-native';
 import { Image } from 'react-native';
 import HomeScreen from '../screen/HomeScreen';
+import DetailsScreen from '../screen/DetailsScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -41,18 +42,63 @@ function TabNavigator() {
               target: route.key,
             });
           };
-          const icon = route.name === 'main'
-            ? require('../../assets/images/SERVICEICON/gst.png')
-            : route.name === 'Example1_1'
-              ? require('../../assets/images/SERVICEICON/passport.png')
-              : require('../../assets/images/SERVICEICON/gst.png');
+          // let icon = route.name === 'main'
+          //   ? require('../../assets/images/SERVICEICON/gst.png')
+          //   : route.name === 'Example1_1'
+          //     ? require('../../assets/images/SERVICEICON/passport.png')
+          //     : require('../../assets/images/SERVICEICON/gst.png');
+              switch (route.name) {
+                case 'main':
+                  icon = require('../../assets/images/SERVICEICON/gst.png')
+                  break;
+                case 'Example1_1':
+                  icon = require('../../assets/images/SERVICEICON/passport.png')
+                  break;
+                case 'Example1_2':
+                  icon = require('../../assets/images/SERVICEICON/passport.png')
+                  break;
+                case 'Example2_1':
+                  icon = require('../../assets/images/SERVICEICON/gst.png');
+                  break;
+                case 'Example2_2':
+                  icon = require('../../assets/images/SERVICEICON/gst.png');
+                  break;
+                default:
+                  icon = null;
+                  break;
+              }
 
 
-          const label_text_value = route.name === 'main'
-            ? "Home"
-            : route.name === 'Example1_1'
-              ? "settings"
-              : "notification";
+          // const label_text_value = route.name === 'main'
+          //   ? "Home"
+          //   : route.name === 'Example1_1'
+          //     ? "settings"
+          //     : "notification";
+          let label_text_value;
+
+          switch (route.name) {
+            case 'main':
+              label_text_value = "Home";
+              break;
+            case 'Example1_1':
+              label_text_value = "Profile";
+              break;
+            case 'Example1_2':
+              label_text_value = "price Chart";
+              break;
+            case 'Example2_1':
+              label_text_value = "History";
+              break;
+            case 'Example2_2':
+              label_text_value = "settings";
+              break;
+            default:
+              label_text_value = null;
+              break;
+          }
+
+          // console.log(label_text_value);  // Output the label_text_value to the console
+
           // Apply different styles for the "home" tab
           if (route.name === 'main') {
             return (
@@ -92,7 +138,11 @@ function TabNavigator() {
                 </View>
               </TouchableOpacity>
             );
-          } else {
+          }
+          else if  (route.name === 'Details'){
+            return(null)
+          }
+           else {
             return (
               <TouchableOpacity
                 accessibilityRole="button"
@@ -198,8 +248,16 @@ function TabNavigator() {
             />
           ),
         }}
-
       />
+
+
+      <Tab.Screen
+        name="Details"
+        component={DetailsScreen}
+        options={{ tabBarButton: () => null }}
+      />
+
+
     </Tab.Navigator>
   );
 }
