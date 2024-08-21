@@ -2,10 +2,26 @@ import { StyleSheet, Image, Text, Dimensions, View, StatusBar } from 'react-nati
 import React from 'react';
 const { width } = Dimensions.get('window');
 import Toast from 'react-native-toast-message';
+import { BackHandler } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+
 
 const pan_card = require('../../assets/images/SERVICEICON/pan_card.png');
 
-const Example2 = () => {
+const Example2 = ({ navigation }) => {
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate('main'); // Navigate back to the main screen
+        return true; // Prevent the default behavior
+      };
+
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+      return () =>
+        BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [navigation])
+  );
   return (
     <View style={styles.container}>
       <StatusBar
@@ -49,7 +65,7 @@ const Example2 = () => {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor:'#fff',
+    backgroundColor: '#fff',
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',

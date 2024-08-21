@@ -52,9 +52,10 @@
 
 
 
-import { StyleSheet, Text, View, StatusBar, ActivityIndicator, FlatList, Dimensions, Image } from 'react-native'
+import { StyleSheet, Text, View,BackHandler, Alert, StatusBar, ActivityIndicator, FlatList, Dimensions, Image } from 'react-native'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigationState } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 
@@ -62,6 +63,35 @@ const HomeScreen = ({ navigation }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const currentRoute = useNavigationState((state) =>
+    state.routes[state.index]?.name
+  );
+
+  useEffect(() => {
+    const backAction = () => {
+      if (currentRoute === 'main') {
+        Alert.alert('Hold on!', 'Are you sure you want to exit the app?', [
+          {
+            text: 'Cancel',
+            onPress: () => null,
+            style: 'cancel',
+          },
+          { text: 'YES', onPress: () => BackHandler.exitApp() },
+        ]);
+        return true;
+      }
+      return false; // Allow the default behavior for other screens
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      backAction
+    );
+
+    return () => backHandler.remove();
+  }, [currentRoute]);
+
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -104,7 +134,7 @@ const HomeScreen = ({ navigation }) => {
         <View style={styles.service_box}
           onStartShouldSetResponder={() => true}
           onResponderGrant={() => {
-            console.log(item.service_code);
+            // console.log(item.service_code);
             navigation.navigate('Details', { 
               "service_code": item.service_code, 
             });
