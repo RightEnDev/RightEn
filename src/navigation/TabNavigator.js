@@ -2,10 +2,14 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Example1 from '../screen/Example1';
 import Example2 from '../screen/Example2';
 
-import { TouchableOpacity, View, Text,Dimensions } from 'react-native';
+import { TouchableOpacity, View, Text, Dimensions } from 'react-native';
 import { Image } from 'react-native';
 import HomeScreen from '../screen/HomeScreen';
 import DetailsScreen from '../screen/DetailsScreen';
+import Profile from '../screen/Profile';
+import PriceChart from '../screen/PriceChart';
+import History from '../screen/History';
+import Settings from '../screen/Settings';
 const screenWidth = Dimensions.get('window').width;
 
 const Tab = createBottomTabNavigator();
@@ -48,26 +52,26 @@ function TabNavigator() {
           //   : route.name === 'Example1_1'
           //     ? require('../../assets/images/SERVICEICON/passport.png')
           //     : require('../../assets/images/SERVICEICON/gst.png');
-              switch (route.name) {
-                case 'main':
-                  icon = require('../../assets/images/SERVICEICON/gst.png')
-                  break;
-                case 'Example1_1':
-                  icon = require('../../assets/images/SERVICEICON/passport.png')
-                  break;
-                case 'Example1_2':
-                  icon = require('../../assets/images/SERVICEICON/passport.png')
-                  break;
-                case 'Example2_1':
-                  icon = require('../../assets/images/SERVICEICON/gst.png');
-                  break;
-                case 'Example2_2':
-                  icon = require('../../assets/images/SERVICEICON/gst.png');
-                  break;
-                default:
-                  icon = null;
-                  break;
-              }
+          switch (route.name) {
+            case 'main':
+              icon = require('../../assets/images/SERVICEICON/gst.png')
+              break;
+            case 'Example1_1':
+              icon = require('../../assets/images/SERVICEICON/passport.png')
+              break;
+            case 'Example1_2':
+              icon = require('../../assets/images/SERVICEICON/passport.png')
+              break;
+            case 'Example2_1':
+              icon = require('../../assets/images/SERVICEICON/gst.png');
+              break;
+            case 'Example2_2':
+              icon = require('../../assets/images/SERVICEICON/gst.png');
+              break;
+            default:
+              icon = null;
+              break;
+          }
 
 
           // const label_text_value = route.name === 'main'
@@ -140,10 +144,10 @@ function TabNavigator() {
               </TouchableOpacity>
             );
           }
-          else if  (route.name === 'Details'){
-            return(null)
+          else if (route.name === 'Details') {
+            return (null)
           }
-           else {
+          else {
             return (
               <TouchableOpacity
                 accessibilityRole="button"
@@ -182,29 +186,31 @@ function TabNavigator() {
   }
   return (
     <Tab.Navigator tabBar={props => <MyTabBar {...props} />} initialRouteName="main">
-      <Tab.Screen name="Example1_1" component={Example1}
+      <Tab.Screen name="Example1_1" component={Profile}
         options={{
           headerStyle: { backgroundColor: '#CFF7FF' }, // Customize header color for this tab
           headerTintColor: '#fff', // Customize header text color
           headerTitleStyle: { color: 'black', fontSize: 20 },
+          headerTitle: '',
           headerLeft: () => (
             <Image
-              source={require('../../assets/images/RightEnStr.jpg')}
-              style={{ width: 150, height: 30, marginRight: 10, marginLeft: 50 }}
+              source={require('../../assets/images/vertical_righten_without_logo.png')}
+              style={{ width: 150, height: 30, marginRight: 'auto', marginLeft: (screenWidth / 2) - 75 }}
             />
           ),
         }}
       />
 
-      <Tab.Screen name="Example1_2" component={Example1}
+      <Tab.Screen name="Example1_2" component={PriceChart}
         options={{
           headerStyle: { backgroundColor: '#CFF7FF' }, // Customize header color for this tab
           headerTintColor: '#fff', // Customize header text color
           headerTitleStyle: { color: 'black', fontSize: 20 },
+          headerTitle: '',
           headerLeft: () => (
             <Image
-              source={require('../../assets/images/RightEnStr.jpg')}
-              style={{ width: 150, height: 30, marginRight: 10, marginLeft: 50 }}
+              source={require('../../assets/images/vertical_righten_without_logo.png')}
+              style={{ width: 150, height: 30, marginRight: 'auto', marginLeft: (screenWidth / 2) - 75 }}
             />
           ),
         }}
@@ -218,34 +224,36 @@ function TabNavigator() {
           headerLeft: () => (
             <Image
               source={require('../../assets/images/vertical_righten_without_logo.png')}
-              style={{ width: 150, height: 50, marginRight: 'auto', marginLeft: (screenWidth/2)-75 }}
+              style={{ width: 150, height: 30, marginRight: 'auto', marginLeft: (screenWidth / 2) - 75 }}
             />
           ),
         }}
       />
-      <Tab.Screen name="Example2_1" component={Example2}
+      <Tab.Screen name="Example2_1" component={History}
         options={{
           headerStyle: { backgroundColor: '#CFF7FF' }, // Customize header color for this tab
           headerTintColor: '#fff', // Customize header text color
           headerTitleStyle: { color: 'black', fontSize: 20 },
+          headerTitle: '',
           headerLeft: () => (
             <Image
-              source={require('../../assets/images/RightEnStr.jpg')}
-              style={{ width: 150, height: 30, marginRight: 'auto', marginLeft: 'auto' }}
+              source={require('../../assets/images/vertical_righten_without_logo.png')}
+              style={{ width: 150, height: 30, marginRight: 'auto', marginLeft: (screenWidth / 2) - 75 }}
             />
           ),
         }}
       />
 
-      <Tab.Screen name="Example2_2" component={Example2}
+      <Tab.Screen name="Example2_2" component={Settings}
         options={{
           headerStyle: { backgroundColor: '#CFF7FF' }, // Customize header color for this tab
           headerTintColor: '#fff',
           headerTitleStyle: { color: 'black', fontSize: 20 },
+          headerTitle: '',
           headerLeft: () => (
             <Image
-              source={require('../../assets/images/RightEnStr.jpg')}
-              style={{ width: 150, height: 30, marginRight: 10, marginLeft: 50 }}
+              source={require('../../assets/images/vertical_righten_without_logo.png')}
+              style={{ width: 150, height: 30, marginRight: 'auto', marginLeft: (screenWidth / 2) - 75 }}
             />
           ),
         }}

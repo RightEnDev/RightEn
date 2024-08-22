@@ -10,6 +10,10 @@ import DetailsScreen from '../screen/DetailsScreen';
 import TabNavigator from './TabNavigator';
 import Splash from '../screen/Splash';
 import LoginScreen from '../screen/LoginScreen';
+import Profile from '../screen/Profile';
+import PriceChart from '../screen/PriceChart';
+import History from '../screen/History';
+import Settings from '../screen/Settings';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,9 +47,11 @@ function StackNavigator(props) {
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
 
       <Stack.Screen name="Home" component={TabNavigator} />
-      <Stack.Screen name="Example1" component={Example1} />
-      <Stack.Screen name="Example2" component={Example2} />
-      <Stack.Screen name="Example3" component={Example3} />
+      <Stack.Screen name="Example1" component={Profile} />
+      <Stack.Screen name="Example2" component={PriceChart} />
+      <Stack.Screen name="Example3" component={History} />
+      <Stack.Screen name="Example4" component={Settings} />
+
       <Stack.Screen name="Details" component={DetailsScreen} />
 
     </Stack.Navigator>

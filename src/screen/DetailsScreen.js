@@ -9,7 +9,7 @@ import { useIsFocused } from '@react-navigation/native';
 const DetailsScreen = ({ route ,navigation}) => {
   const isFocused = useIsFocused();
 
-  const { service_code } = route.params;
+  const { service_code,app_icon } = route.params;
   console.log(service_code);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -94,7 +94,7 @@ const DetailsScreen = ({ route ,navigation}) => {
           <View style={styles.image_container}>
 
             <Image
-            source={{ uri: `https://righten.in/public/admin/assets/img/service_icon/${item.app_icon}` }}
+            source={{ uri: `https://righten.in/public/admin/assets/img/service_icon/${data[0].app_banner}` }}
             style={styles.panCardImage}
               resizeMode='cover'
             />
@@ -122,7 +122,7 @@ const DetailsScreen = ({ route ,navigation}) => {
       }}>
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: 'https://placehold.jp/400x250.png' }}
+            source={{ uri: `https://righten.in/public/admin/assets/img/service_icon/${app_icon}` }}
             style={styles.image}
             resizeMode='cover'
           />

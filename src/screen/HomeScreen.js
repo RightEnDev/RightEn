@@ -137,6 +137,7 @@ const HomeScreen = ({ navigation }) => {
             // console.log(item.service_code);
             navigation.navigate('Details', { 
               "service_code": item.service_code, 
+              "app_icon": item.app_icon, 
             });
             
 
@@ -156,7 +157,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.service_image_container}>
       <StatusBar
         // barStyle="light-content" // Light text for dark backgrounds
-        backgroundColor="#CFF7FF"
+        backgroundColor="#06b4d6"
       />
 
       <View style={{ marginTop: 30 }}>
