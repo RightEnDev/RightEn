@@ -12,6 +12,8 @@ import History from '../screen/History';
 import Settings from '../screen/Settings';
 import ServiceForm from '../screen/ServiceForm';
 const screenWidth = Dimensions.get('window').width;
+import { SvgXml } from 'react-native-svg';
+import { mobile_svg, profileSVG, settingsSVG, price_chartSVG, reportSVG, eye, eyeoff } from '../../assets/ALLSVG';
 
 const Tab = createBottomTabNavigator();
 
@@ -53,21 +55,22 @@ function TabNavigator() {
           //   : route.name === 'Example1_1'
           //     ? require('../../assets/images/SERVICEICON/passport.png')
           //     : require('../../assets/images/SERVICEICON/gst.png');
+          let icon
           switch (route.name) {
             case 'main':
               icon = require('../../assets/images/SERVICEICON/gst.png')
               break;
             case 'Example1_1':
-              icon = require('../../assets/images/SERVICEICON/passport.png')
+              icon = price_chartSVG
               break;
             case 'Example1_2':
-              icon = require('../../assets/images/SERVICEICON/passport.png')
+              icon = price_chartSVG
               break;
             case 'Example2_1':
-              icon = require('../../assets/images/SERVICEICON/gst.png');
+              icon = price_chartSVG
               break;
             case 'Example2_2':
-              icon = require('../../assets/images/SERVICEICON/gst.png');
+              icon = price_chartSVG
               break;
             default:
               icon = null;
@@ -165,13 +168,7 @@ function TabNavigator() {
                 <View style={{
                   alignItems: 'center', justifyContent: 'center', width: '100%',
                 }}>
-                  <Image
-                    source={icon}
-                    style={{
-                      width: route.name === 'Example1_1' ? 40 : 40,
-                      height: route.name === 'main' ? 40 : 40,
-                    }}
-                  />
+                  <SvgXml xml={icon} />
                   <Text style={{ color: '#000' }}>
                     {label_text_value}
                   </Text>

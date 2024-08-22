@@ -1,17 +1,17 @@
-import { StyleSheet, Text, View, ActivityIndicator, FlatList, TextInput, TouchableOpacity, Dimensions, Image } from 'react-native'
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-const { width } = Dimensions.get('window');
-import { BackHandler } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import React, { useState, useCallback } from 'react';
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
-import { useIsFocused } from '@react-navigation/native';
+
+const { width } = Dimensions.get('window');
+import { SvgXml } from 'react-native-svg';
+import { mobile_svg, profileSVG, settingsSVG, price_chartSVG, reportSVG, eye, eyeoff } from '../../assets/ALLSVG';
 
 const ServiceForm = ({ route, navigation }) => {
     const { service_code, service_data, app_icon } = route.params;
-    console.log("=======================service data ====================", service_code);
-    console.log(service_data);
+
     useFocusEffect(
-        React.useCallback(() => {
+        useCallback(() => {
             const onBackPress = () => {
                 navigation.navigate('main');
                 return true;
@@ -19,15 +19,26 @@ const ServiceForm = ({ route, navigation }) => {
 
             BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-            return () =>
-                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+            return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
         }, [navigation])
     );
+
     const [panType, setPanType] = useState('');
     const [name, setName] = useState('');
     const [dob, setDob] = useState('');
+    const [showPicker, setShowPicker] = useState(false);
+    const [selectedDate, setSelectedDate] = useState(new Date());
     const [fatherName, setFatherName] = useState('');
     const [mobileNo, setMobileNo] = useState('');
+
+    const handleDateChange = (event, date) => {
+        setShowPicker(false);
+        if (date) {
+            const formattedDate = date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+            setDob(formattedDate);
+            setSelectedDate(date);
+        }
+    };
 
     const handleSubmit = () => {
         // Handle form submission here
@@ -35,68 +46,118 @@ const ServiceForm = ({ route, navigation }) => {
     };
 
     return (
-        <View style={styles.container}>
-                        <Text style={styles.label}>form</Text>
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // Adjust offset if needed
+        >
+            <ScrollView contentContainerStyle={styles.container}>
+                <Text style={styles.label}>Pan Type <Text style={{ color: 'red' }}>*</Text></Text>
+                <View style={styles.input_view}>
+                    <View style={styles.svg_box}>
 
+                        <SvgXml xml={price_chartSVG} />
+                    </View>
 
-            {/* <Text style={styles.label}>Pan Type</Text>
-            <TextInput
-                style={styles.input}
-                value={panType}
-                onChangeText={setPanType}
-                placeholder="Enter Pan Type"
-                placeholderTextColor="gray"
-            />
+                    <TextInput
+                        style={styles.input}
+                        value={panType}
+                        onChangeText={setPanType}
+                        placeholder="Enter Pan Type"
+                        placeholderTextColor="black"
+                    />
+                </View>
 
-            <Text style={styles.label}>Name</Text>
-            <TextInput
-                style={styles.input}
-                value={name}
-                onChangeText={setName}
-                placeholder="Enter Name"
-                placeholderTextColor="gray"
-            />
+                <Text style={styles.label}>Name <Text style={{ color: 'red' }}>*</Text></Text>
+                <View style={styles.input_view}>
+                    <View style={styles.svg_box}>
 
-            <Text style={styles.label}>DOB</Text>
-            <TextInput
-                style={styles.input}
-                value={dob}
-                onChangeText={setDob}
-                placeholder="Enter DOB"
-                placeholderTextColor="gray"
-            />
+                        <SvgXml xml={price_chartSVG} />
+                    </View>
+                    <TextInput
+                        style={styles.input}
+                        value={name}
+                        onChangeText={setName}
+                        placeholder="Enter Name"
+                        placeholderTextColor="black"
+                    />
+                </View>
 
-            <Text style={styles.label}>Father's Name</Text>
-            <TextInput
-                style={styles.input}
-                value={fatherName}
-                onChangeText={setFatherName}
-                placeholder="Enter Father's Name"
-                placeholderTextColor="gray"
-            />
+                <Text style={styles.label}>DOB <Text style={{ color: 'red' }}>*</Text></Text>
+                <View style={styles.input_view}>
+                    <View style={styles.svg_box}>
 
-            <Text style={styles.label}>Mobile no</Text>
-            <TextInput
-                style={styles.input}
-                value={mobileNo}
-                onChangeText={setMobileNo}
-                placeholder="Enter Mobile Number"
-                placeholderTextColor="gray"
-                keyboardType="numeric"
-            />
+                        <SvgXml xml={price_chartSVG} />
+                    </View>
+                    <TouchableOpacity onPress={() => setShowPicker(true)} style={{ flex: 1 }}>
+                        <TextInput
+                            style={[styles.input, { width: '100%' }]}
+                            value={dob}
+                            placeholder="Select Date of Birth"
+                            placeholderTextColor="black"
+                            editable={false}
+                        />
+                    </TouchableOpacity>
+                    {showPicker && (
+                        <DateTimePicker
+                            value={selectedDate}
+                            mode="date"
+                            display="spinner" // Use "spinner" for better UX on mobile
+                            maximumDate={new Date()}
+                            onChange={handleDateChange}
+                        />
+                    )}
+                    <View style={[styles.svg_box,{alignItems:'flex-end'}]}>
 
-            <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                <Text style={styles.buttonText}>Submit</Text>
-            </TouchableOpacity> */}
-        </View>
+                        <SvgXml xml={price_chartSVG} />
+                    </View>
+                </View>
+
+                <Text style={styles.label}>Father's Name <Text style={{ color: 'red' }}>*</Text></Text>
+                <View style={styles.input_view}>
+                    <View style={styles.svg_box}>
+
+                        <SvgXml xml={price_chartSVG} />
+                    </View>
+                    <TextInput
+                        style={styles.input}
+                        value={fatherName}
+                        onChangeText={setFatherName}
+                        placeholder="Enter Father's Name"
+                        placeholderTextColor="black"
+                    />
+                </View>
+
+                <Text style={styles.label}>Mobile no <Text style={{ color: 'red' }}>*</Text></Text>
+                <View style={styles.input_view}>
+                    <View style={styles.svg_box}>
+
+                        <SvgXml xml={price_chartSVG} />
+                    </View>
+                    <TextInput
+                        style={styles.input}
+                        value={mobileNo}
+                        onChangeText={setMobileNo}
+                        placeholder="Enter Mobile Number"
+                        placeholderTextColor="black"
+                        maxLength={10}
+                        keyboardType="numeric"
+                    />
+                </View>
+
+                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+                    <Text style={styles.buttonText}>Submit</Text>
+                </TouchableOpacity>
+            </ScrollView>
+        </KeyboardAvoidingView>
     );
-}
+};
 
-export default ServiceForm
+export default ServiceForm;
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
         padding: 20,
         backgroundColor: '#fff',
     },
@@ -104,24 +165,47 @@ const styles = StyleSheet.create({
         color: 'black',
         fontSize: 16,
         marginBottom: 8,
+        fontWeight: 'bold',
+        marginBottom: 15,
+
     },
+    input_view: {
+        borderColor: '#ccc',
+        borderWidth: 2,
+        borderRadius: 10,
+        alignItems: 'center',
+        flexDirection: 'row',
+        marginBottom: 15,
+    },
+    svg_box: {
+        borderColor: '#ccc',
+        borderWidth: 2,
+        borderRadius: 5,
+        backgroundColor: '#d2d2d2'
+    },
+
     input: {
         height: 40,
-        borderColor: '#ccc',
-        borderWidth: 1,
-        borderRadius: 5,
-        marginBottom: 20,
+        width: '80%',
+        alignItems: 'center',
         paddingHorizontal: 10,
+        fontSize: 18,
         color: 'black',
+        fontFamily: 'BAUHS93',
+        borderColor: '#ccc',
+        // backgroundColor:'red'
     },
     button: {
-        backgroundColor: '#007BFF',
+        backgroundColor: '#FFCB0A',
         paddingVertical: 10,
         borderRadius: 5,
         alignItems: 'center',
+        marginTop:10,
+        
     },
     buttonText: {
         color: '#fff',
-        fontSize: 16,
+        fontSize: 20,
+        fontWeight:'bold'
     },
 });
