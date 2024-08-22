@@ -89,7 +89,18 @@ const DetailsScreen = ({ route ,navigation}) => {
   const renderItem = ({ item }) => {
     // console.log(item.charges);
     return(
-    <View >
+    <View 
+    onStartShouldSetResponder={() => true}
+          onResponderGrant={() => {
+            // console.log(item.service_code);
+            navigation.navigate('ServiceForm', { 
+              "service_code": service_code, 
+              "service_data": data, 
+              "app_icon":app_icon
+            });
+            
+
+          }}>
       <View style={styles.CardContainer}>
           <View style={styles.image_container}>
 
@@ -105,7 +116,7 @@ const DetailsScreen = ({ route ,navigation}) => {
           </View>
           <View style={styles.service_option_price_view}>
 
-            <Text style={styles.service_option_price}>₹{item.charges}</Text>
+            <Text style={styles.service_option_price}>₹{item.offer_price}</Text>
           </View>
 
         </View>
@@ -124,7 +135,7 @@ const DetailsScreen = ({ route ,navigation}) => {
           <Image
             source={{ uri: `https://righten.in/public/app/assets/img/service_banner/${service_code}_banner.png` }}
             style={styles.imagebanner}
-            resizeMode='contain'
+            resizeMode='stretch'
           />
                     {/* https://righten.in/api/users/services/banner?service_code=REPAN */}
 
@@ -163,7 +174,7 @@ const styles = StyleSheet.create({
   imagebanner: {
     width: '100%',
     height: 'undefined',
-    aspectRatio: 1.5,
+    aspectRatio: 1.7,
     borderWidth: 5,
     borderColor: 'gray',
     borderRadius: 15,
@@ -203,7 +214,7 @@ const styles = StyleSheet.create({
     width: (width / 3) - 28,
     borderTopWidth: 2,
     borderTopColor: '#009743',
-    height: 35,
+    // height: 40,
     borderLeftWidth: 2,
     borderRightWidth: 2,
     justifyContent: 'center',
@@ -215,6 +226,10 @@ const styles = StyleSheet.create({
     fontFamily: 'BAUHS93',
     // fontSize: 20,
     fontWeight: 'bold',
+    paddingBottom:5,
+    paddingTop:5,
+    paddingLeft:3,
+    paddingRight:3,
     color:'black'
   },
   service_option_price: {

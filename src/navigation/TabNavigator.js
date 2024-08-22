@@ -10,6 +10,7 @@ import Profile from '../screen/Profile';
 import PriceChart from '../screen/PriceChart';
 import History from '../screen/History';
 import Settings from '../screen/Settings';
+import ServiceForm from '../screen/ServiceForm';
 const screenWidth = Dimensions.get('window').width;
 
 const Tab = createBottomTabNavigator();
@@ -144,7 +145,7 @@ function TabNavigator() {
               </TouchableOpacity>
             );
           }
-          else if (route.name === 'Details') {
+          else if (route.name === 'Details' || route.name === 'ServiceForm') {
             return (null)
           }
           else {
@@ -263,7 +264,18 @@ function TabNavigator() {
       <Tab.Screen
         name="Details"
         component={DetailsScreen}
-        options={{ tabBarButton: () => null }}
+        options={{
+          tabBarButton: () => null,
+          headerTitle: '',
+        }}
+      />
+      <Tab.Screen
+        name="ServiceForm"
+        component={ServiceForm}
+        options={{
+          tabBarButton: () => null,
+          headerTitle: '',
+        }}
       />
 
 
