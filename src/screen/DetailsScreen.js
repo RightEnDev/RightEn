@@ -94,7 +94,7 @@ const DetailsScreen = ({ route ,navigation}) => {
           <View style={styles.image_container}>
 
             <Image
-            source={{ uri: `https://righten.in/public/admin/assets/img/service_icon/${data[0].app_banner}` }}
+            source={{ uri: `https://righten.in/public/admin/assets/img/service_icon/${app_icon}` }}
             style={styles.panCardImage}
               resizeMode='cover'
             />
@@ -122,10 +122,12 @@ const DetailsScreen = ({ route ,navigation}) => {
       }}>
         <View style={styles.imageContainer}>
           <Image
-            source={{ uri: `https://righten.in/public/admin/assets/img/service_icon/${app_icon}` }}
-            style={styles.image}
-            resizeMode='cover'
+            source={{ uri: `https://righten.in/public/app/assets/img/service_banner/${service_code}_banner.png` }}
+            style={styles.imagebanner}
+            resizeMode='contain'
           />
+                    {/* https://righten.in/api/users/services/banner?service_code=REPAN */}
+
         </View>
       <FlatList
         data={data}
@@ -156,13 +158,14 @@ const styles = StyleSheet.create({
   imageContainer: {
     marginTop: 15,
     marginBottom: 15,
+    // backgroundColor:'red'
   },
-  image: {
+  imagebanner: {
     width: '100%',
-    height: undefined,
+    height: 'undefined',
     aspectRatio: 1.5,
     borderWidth: 5,
-    borderColor: 'black',
+    borderColor: 'gray',
     borderRadius: 15,
   },
   image_container: {

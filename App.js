@@ -20,7 +20,7 @@ const App = () => {
   fetchData();
 
   const shouldLoad = load
-  console.log(shouldLoad);
+  // console.log(shouldLoad);
 
   return (
     <View style={{ flex: 1 }}>
