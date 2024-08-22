@@ -143,7 +143,7 @@ const HomeScreen = ({ navigation }) => {
           }}
         >
           <Image
-            source={{ uri: `https://righten.in/public/app/assets/img/service_icon/${item.app_icon}` }}
+            source={{ uri: `https://righten.in/public/admin/assets/img/service_icon/${item.app_icon}` }}
             style={styles.service_image}
           />
           {/* <Text>{item.service_name}</Text> */}

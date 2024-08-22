@@ -2,10 +2,11 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Example1 from '../screen/Example1';
 import Example2 from '../screen/Example2';
 
-import { TouchableOpacity, View, Text } from 'react-native';
+import { TouchableOpacity, View, Text,Dimensions } from 'react-native';
 import { Image } from 'react-native';
 import HomeScreen from '../screen/HomeScreen';
 import DetailsScreen from '../screen/DetailsScreen';
+const screenWidth = Dimensions.get('window').width;
 
 const Tab = createBottomTabNavigator();
 
@@ -216,8 +217,8 @@ function TabNavigator() {
           headerTitleStyle: { color: 'black', fontSize: 20 },
           headerLeft: () => (
             <Image
-              source={require('../../assets/images/RightEnStr.jpg')}
-              style={{ width: 150, height: 30, marginRight: 'auto', marginLeft: 10 }}
+              source={require('../../assets/images/vertical_righten_without_logo.png')}
+              style={{ width: 150, height: 50, marginRight: 'auto', marginLeft: (screenWidth/2)-75 }}
             />
           ),
         }}

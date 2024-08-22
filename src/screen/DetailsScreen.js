@@ -4,8 +4,11 @@ import axios from 'axios';
 const { width } = Dimensions.get('window');
 import { BackHandler } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useIsFocused } from '@react-navigation/native';
 
 const DetailsScreen = ({ route ,navigation}) => {
+  const isFocused = useIsFocused();
+
   const { service_code } = route.params;
   console.log(service_code);
   const [data, setData] = useState([]);
@@ -25,33 +28,47 @@ const DetailsScreen = ({ route ,navigation}) => {
     }, [navigation])
   );
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get('https://righten.in/api/users/services/sub_service?service_code=' + service_code, {
-          headers: {
-            'Cache-Control': 'no-cache',
-            'Pragma': 'no-cache',
-            'Expires': '0',
-          },
-        });
-        console.log(response.data);
-        if (!response.data.status === "success") {
-          throw new Error('Network response was not ok');
-        }
-        setData(response.data.data);
-      } catch (error) {
-        setError(error.message);
-      } finally {
-        setLoading(false);
+  useFocusEffect(
+    React.useCallback(() => {
+      // Reset the state when the screen is unfocused
+      return () => {
+        setData([]);
+        setLoading(true);
+        setError(null);
+        console.log("data reset done ---------------------------------- ");
+        // fetchData();
+
+      };
+    }, [])
+  );
+
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+
+      setData([]);
+      const response = await axios.get(`https://righten.in/api/users/services/sub_service?service_code=${service_code}`, {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      });
+      console.log(response.data);
+      if (!response.data.status === "success") {
+        throw new Error('Network response was not ok');
       }
-    };
-    // console.log("details fetch success");
-
-
+      setData(response.data.data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => {
+    // console.log("trying");
     fetchData();
-    // console.log("details fetch success");
-  }, []);
+  }, [isFocused]);
 
   if (loading) {
     return (
@@ -77,7 +94,7 @@ const DetailsScreen = ({ route ,navigation}) => {
           <View style={styles.image_container}>
 
             <Image
-            source={{ uri: `https://righten.in/public/app/assets/img/service_icon/${item.app_icon}` }}
+            source={{ uri: `https://righten.in/public/admin/assets/img/service_icon/${item.app_icon}` }}
             style={styles.panCardImage}
               resizeMode='cover'
             />
@@ -118,7 +135,6 @@ const DetailsScreen = ({ route ,navigation}) => {
         ListEmptyComponent={<Text>No data available</Text>}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles.service_row}
-
       />
       </View>
 
