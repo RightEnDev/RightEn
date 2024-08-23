@@ -5,7 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 import { SvgXml } from 'react-native-svg';
-import { mobile_svg, profileSVG, settingsSVG, price_chartSVG, reportSVG, eye, eyeoff } from '../../assets/ALLSVG';
+import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG } from '../../assets/ALLSVG';
 
 const ServiceForm = ({ route, navigation }) => {
     const { service_code, service_data, app_icon } = route.params;
@@ -56,7 +56,7 @@ const ServiceForm = ({ route, navigation }) => {
                 <View style={styles.input_view}>
                     <View style={styles.svg_box}>
 
-                        <SvgXml xml={price_chartSVG} />
+                        <SvgXml xml={nameSVG} />
                     </View>
 
                     <TextInput
@@ -72,7 +72,7 @@ const ServiceForm = ({ route, navigation }) => {
                 <View style={styles.input_view}>
                     <View style={styles.svg_box}>
 
-                        <SvgXml xml={price_chartSVG} />
+                        <SvgXml xml={nameSVG} />
                     </View>
                     <TextInput
                         style={styles.input}
@@ -87,7 +87,7 @@ const ServiceForm = ({ route, navigation }) => {
                 <View style={styles.input_view}>
                     <View style={styles.svg_box}>
 
-                        <SvgXml xml={price_chartSVG} />
+                        <SvgXml xml={DOBSVG} />
                     </View>
                     <TouchableOpacity onPress={() => setShowPicker(true)} style={{ flex: 1 }}>
                         <TextInput
@@ -107,9 +107,12 @@ const ServiceForm = ({ route, navigation }) => {
                             onChange={handleDateChange}
                         />
                     )}
-                    <View style={[styles.svg_box,{alignItems:'flex-end'}]}>
+                    <View style={[styles.svg_box,{alignItems:'flex-end'}]}
+                    onStartShouldSetResponder={() => true}
+                    onResponderRelease={()=>setShowPicker(true)}
+                    >
 
-                        <SvgXml xml={price_chartSVG} />
+                        <SvgXml xml={datepicker} />
                     </View>
                 </View>
 
@@ -117,7 +120,7 @@ const ServiceForm = ({ route, navigation }) => {
                 <View style={styles.input_view}>
                     <View style={styles.svg_box}>
 
-                        <SvgXml xml={price_chartSVG} />
+                        <SvgXml xml={fatherNameSVG} />
                     </View>
                     <TextInput
                         style={styles.input}
@@ -132,7 +135,7 @@ const ServiceForm = ({ route, navigation }) => {
                 <View style={styles.input_view}>
                     <View style={styles.svg_box}>
 
-                        <SvgXml xml={price_chartSVG} />
+                        <SvgXml xml={MobileSVG} />
                     </View>
                     <TextInput
                         style={styles.input}
@@ -173,7 +176,7 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 2,
         borderRadius: 10,
-        alignItems: 'center',
+        // alignItems: 'center',
         flexDirection: 'row',
         marginBottom: 15,
     },
@@ -181,7 +184,10 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
         borderWidth: 2,
         borderRadius: 5,
-        backgroundColor: '#d2d2d2'
+        backgroundColor: '#d2d2d2',
+        justifyContent:'center',
+        alignItems:'center'
+
     },
 
     input: {

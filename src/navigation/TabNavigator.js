@@ -13,7 +13,7 @@ import Settings from '../screen/Settings';
 import ServiceForm from '../screen/ServiceForm';
 const screenWidth = Dimensions.get('window').width;
 import { SvgXml } from 'react-native-svg';
-import { mobile_svg, profileSVG, settingsSVG, price_chartSVG, reportSVG, eye, eyeoff } from '../../assets/ALLSVG';
+import { mobile_svg, profileSVG, historySVG,settingsSVG, price_chartSVG, reportSVG, eye, eyeoff } from '../../assets/ALLSVG';
 
 const Tab = createBottomTabNavigator();
 
@@ -58,19 +58,19 @@ function TabNavigator() {
           let icon
           switch (route.name) {
             case 'main':
-              icon = require('../../assets/images/SERVICEICON/gst.png')
+              icon = require('../../assets/images/logo.png')
               break;
             case 'Example1_1':
-              icon = price_chartSVG
+              icon = profileSVG
               break;
             case 'Example1_2':
-              icon = price_chartSVG
+              icon = reportSVG
               break;
             case 'Example2_1':
-              icon = price_chartSVG
+              icon = historySVG
               break;
             case 'Example2_2':
-              icon = price_chartSVG
+              icon = settingsSVG
               break;
             default:
               icon = null;
