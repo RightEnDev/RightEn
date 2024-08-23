@@ -1,14 +1,20 @@
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
 
 const { width } = Dimensions.get('window');
 import { SvgXml } from 'react-native-svg';
 import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG } from '../../assets/ALLSVG';
+import Type1 from '../ServiceForm/Type1';
+// import { useIsFocused } from '@react-navigation/native';
 
 const ServiceForm = ({ route, navigation }) => {
+    // const isFocused = useIsFocused();
+
     const { service_code, service_data, app_icon } = route.params;
+    console.log("*************************************");
+    console.log(service_data);
 
     useFocusEffect(
         useCallback(() => {
@@ -22,138 +28,10 @@ const ServiceForm = ({ route, navigation }) => {
             return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
         }, [navigation])
     );
-
-    const [panType, setPanType] = useState('');
-    const [name, setName] = useState('');
-    const [dob, setDob] = useState('');
-    const [showPicker, setShowPicker] = useState(false);
-    const [selectedDate, setSelectedDate] = useState(new Date());
-    const [fatherName, setFatherName] = useState('');
-    const [mobileNo, setMobileNo] = useState('');
-
-    const handleDateChange = (event, date) => {
-        setShowPicker(false);
-        if (date) {
-            const formattedDate = date.toISOString().split('T')[0]; // Format date as YYYY-MM-DD
-            setDob(formattedDate);
-            setSelectedDate(date);
-        }
-    };
-
-    const handleSubmit = () => {
-        // Handle form submission here
-        console.log('Submitted Data:', { panType, name, dob, fatherName, mobileNo });
-    };
-
-    return (
-        <KeyboardAvoidingView
-            style={{ flex: 1 }}
-            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // Adjust offset if needed
-        >
-            <ScrollView contentContainerStyle={styles.container}>
-                <Text style={styles.label}>Pan Type <Text style={{ color: 'red' }}>*</Text></Text>
-                <View style={styles.input_view}>
-                    <View style={styles.svg_box}>
-
-                        <SvgXml xml={nameSVG} />
-                    </View>
-
-                    <TextInput
-                        style={styles.input}
-                        value={panType}
-                        onChangeText={setPanType}
-                        placeholder="Enter Pan Type"
-                        placeholderTextColor="black"
-                    />
-                </View>
-
-                <Text style={styles.label}>Name <Text style={{ color: 'red' }}>*</Text></Text>
-                <View style={styles.input_view}>
-                    <View style={styles.svg_box}>
-
-                        <SvgXml xml={nameSVG} />
-                    </View>
-                    <TextInput
-                        style={styles.input}
-                        value={name}
-                        onChangeText={setName}
-                        placeholder="Enter Name"
-                        placeholderTextColor="black"
-                    />
-                </View>
-
-                <Text style={styles.label}>DOB <Text style={{ color: 'red' }}>*</Text></Text>
-                <View style={styles.input_view}>
-                    <View style={styles.svg_box}>
-
-                        <SvgXml xml={DOBSVG} />
-                    </View>
-                    <TouchableOpacity onPress={() => setShowPicker(true)} style={{ flex: 1 }}>
-                        <TextInput
-                            style={[styles.input, { width: '100%' }]}
-                            value={dob}
-                            placeholder="Select Date of Birth"
-                            placeholderTextColor="black"
-                            editable={false}
-                        />
-                    </TouchableOpacity>
-                    {showPicker && (
-                        <DateTimePicker
-                            value={selectedDate}
-                            mode="date"
-                            display="spinner" // Use "spinner" for better UX on mobile
-                            maximumDate={new Date()}
-                            onChange={handleDateChange}
-                        />
-                    )}
-                    <View style={[styles.svg_box,{alignItems:'flex-end'}]}
-                    onStartShouldSetResponder={() => true}
-                    onResponderRelease={()=>setShowPicker(true)}
-                    >
-
-                        <SvgXml xml={datepicker} />
-                    </View>
-                </View>
-
-                <Text style={styles.label}>Father's Name <Text style={{ color: 'red' }}>*</Text></Text>
-                <View style={styles.input_view}>
-                    <View style={styles.svg_box}>
-
-                        <SvgXml xml={fatherNameSVG} />
-                    </View>
-                    <TextInput
-                        style={styles.input}
-                        value={fatherName}
-                        onChangeText={setFatherName}
-                        placeholder="Enter Father's Name"
-                        placeholderTextColor="black"
-                    />
-                </View>
-
-                <Text style={styles.label}>Mobile no <Text style={{ color: 'red' }}>*</Text></Text>
-                <View style={styles.input_view}>
-                    <View style={styles.svg_box}>
-
-                        <SvgXml xml={MobileSVG} />
-                    </View>
-                    <TextInput
-                        style={styles.input}
-                        value={mobileNo}
-                        onChangeText={setMobileNo}
-                        placeholder="Enter Mobile Number"
-                        placeholderTextColor="black"
-                        maxLength={10}
-                        keyboardType="numeric"
-                    />
-                </View>
-
-                <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-                    <Text style={styles.buttonText}>Submit</Text>
-                </TouchableOpacity>
-            </ScrollView>
-        </KeyboardAvoidingView>
-    );
+return(
+    <Type1 label={service_data.name +" @ "+ service_data.offer_price} cardtype="Pan" />
+)
+    
 };
 
 export default ServiceForm;

@@ -10,7 +10,7 @@ const DetailsScreen = ({ route ,navigation}) => {
   const isFocused = useIsFocused();
 
   const { service_code,app_icon } = route.params;
-  console.log(service_code);
+  // console.log(service_code);
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,7 +35,7 @@ const DetailsScreen = ({ route ,navigation}) => {
         setData([]);
         setLoading(true);
         setError(null);
-        console.log("data reset done ---------------------------------- ");
+        // console.log("data reset done ---------------------------------- ");
         // fetchData();
 
       };
@@ -54,7 +54,7 @@ const DetailsScreen = ({ route ,navigation}) => {
           'Expires': '0',
         },
       });
-      console.log(response.data);
+      // console.log(response.data);
       if (!response.data.status === "success") {
         throw new Error('Network response was not ok');
       }
@@ -87,7 +87,8 @@ const DetailsScreen = ({ route ,navigation}) => {
     );
   }
   const renderItem = ({ item }) => {
-    // console.log(item.charges);
+    // console.log(item);
+    // console.log("----------------------------");
     return(
     <View 
     onStartShouldSetResponder={() => true}
@@ -95,7 +96,7 @@ const DetailsScreen = ({ route ,navigation}) => {
             // console.log(item.service_code);
             navigation.navigate('ServiceForm', { 
               "service_code": service_code, 
-              "service_data": data, 
+              "service_data": item, 
               "app_icon":app_icon
             });
             
