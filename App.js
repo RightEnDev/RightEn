@@ -7,7 +7,13 @@ const App = () => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('https://iamankanghosh.github.io/VerifyMyJson/checkJson.json');
+      const response = await axios.get('https://iamankanghosh.github.io/VerifyMyJson/checkJson.json', {
+        headers: {
+          'Cache-Control': 'no-cache',
+          'Pragma': 'no-cache',
+          'Expires': '0',
+        },
+      });
       // console.log(response.data.builddAPP);
       if (response.data.builddAPP) {
         setload(response.data.builddAPP)
