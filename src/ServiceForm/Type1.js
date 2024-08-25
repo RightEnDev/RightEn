@@ -1,13 +1,19 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView, Alert } from 'react-native';
 import React, { useState, useCallback } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import qs from 'qs';
 const { width } = Dimensions.get('window');
 import { SvgXml } from 'react-native-svg';
 import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG, serviceSVG } from '../../assets/ALLSVG';
 
-const Type1 = ({ label, cardtype }) => {
+const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_service_id ,navigation }) => {
+    // console.log("hello");
+    // console.log(form_service_code,form_sub_service_id,form_service_id);
+    const [formResponse, setformResponse] = useState([]);
+
     const [panType, setPanType] = useState('');
     const [name, setName] = useState('');
 
@@ -29,10 +35,61 @@ const Type1 = ({ label, cardtype }) => {
         }
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // Handle form submission here
-        const dateOfBirth = DD+'-'+MM+'-'+YYYY
-        console.log('Submitted Data:', { panType, name, dateOfBirth, fatherName, mobileNo });
+        const month = parseInt(MM, 10);
+        const day = parseInt(DD, 10);
+
+        // Validate the values
+        if (isNaN(month) || month < 1 || month > 12 || isNaN(day) || day < 1 || day > 31) {
+            Alert.alert("Validation Error", "The month or day is out of range");
+        }
+        else{
+            const user_id = await AsyncStorage.getItem('us_id');
+            const dateOfBirth = YYYY + '-' + MM + '-' + DD;
+
+            if (
+                user_id &&
+                form_service_id &&
+                form_service_code &&
+                form_sub_service_id &&
+                name &&
+                fatherName &&
+                dateOfBirth &&
+                mobileNo
+            ){
+                
+            console.log('Submitted Data:', { user_id, panType, name, dateOfBirth, fatherName, mobileNo });
+    
+            const response = await axios.post('https://righten.in/api/services/pancard/save',
+                qs.stringify({
+                    user_id: user_id,
+                    service_id: form_service_id,
+                    service_code: form_service_code,
+                    sub_service_id: form_sub_service_id,
+                    name: name,
+                    father_name: fatherName,
+                    date_of_birth: dateOfBirth,
+                    mobile: mobileNo,
+    
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }
+            );
+            console.log(response.data.data);
+            setformResponse(response.data.data);
+            navigation.navigate('ImagePicker');
+            } else {
+                Alert.alert("Enter all field");
+
+            }
+        }
+        
+
+
     };
 
     return (
@@ -64,6 +121,7 @@ const Type1 = ({ label, cardtype }) => {
                         onChangeText={setName}
                         placeholder="Enter Name"
                         placeholderTextColor="black"
+                        
                     />
                 </View>
 
@@ -73,39 +131,39 @@ const Type1 = ({ label, cardtype }) => {
 
                         <SvgXml xml={DOBSVG} />
                     </View>
-                    <View style={{flex:1,flexDirection:'row',alignItems:'center',paddingLeft:5,paddingBottom:5}}>
-                    <TextInput
-                        style={[styles.input, { width: '15%',borderBottomWidth:2,borderColor:'#000' }]}
-                        value={DD}
-                        onChangeText={setDD}
-                        placeholderTextColor="black"
-                        maxLength={2}
-                        keyboardType="numeric"
-                        placeholder="DD"
+                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 5, paddingBottom: 5 }}>
+                        <TextInput
+                            style={[styles.input, { width: '15%', borderBottomWidth: 2, borderColor: '#000' }]}
+                            value={DD}
+                            onChangeText={setDD}
+                            placeholderTextColor="black"
+                            maxLength={2}
+                            keyboardType="numeric"
+                            placeholder="DD"
 
-                    />
-                    <Text style={{fontSize:20}}>/</Text>
-                    <TextInput
-                        style={[styles.input, { width: '20%',borderBottomWidth:2,borderColor:'#000' }]}
-                        value={MM}
-                        onChangeText={setMM}
-                        placeholderTextColor="black"
-                        maxLength={2}
-                        keyboardType="numeric"
-                        placeholder="MM"
+                        />
+                        <Text style={{ fontSize: 20 }}>/</Text>
+                        <TextInput
+                            style={[styles.input, { width: '20%', borderBottomWidth: 2, borderColor: '#000' }]}
+                            value={MM}
+                            onChangeText={setMM}
+                            placeholderTextColor="black"
+                            maxLength={2}
+                            keyboardType="numeric"
+                            placeholder="MM"
 
-                    />
-                    <Text style={{fontSize:20}}>/</Text>
-                    <TextInput
-                        style={[styles.input, { width: '30%',borderBottomWidth:2,borderColor:'#000' }]}
-                        value={YYYY}
-                        onChangeText={setYYYY}
-                        placeholderTextColor="black"
-                        maxLength={4}
-                        keyboardType="numeric"
-                        placeholder="YYYY"
+                        />
+                        <Text style={{ fontSize: 20 }}>/</Text>
+                        <TextInput
+                            style={[styles.input, { width: '30%', borderBottomWidth: 2, borderColor: '#000' }]}
+                            value={YYYY}
+                            onChangeText={setYYYY}
+                            placeholderTextColor="black"
+                            maxLength={4}
+                            keyboardType="numeric"
+                            placeholder="YYYY"
 
-                    />
+                        />
                     </View>
 
                 </View>

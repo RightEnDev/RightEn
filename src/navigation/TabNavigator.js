@@ -13,7 +13,9 @@ import Settings from '../screen/Settings';
 import ServiceForm from '../screen/ServiceForm';
 const screenWidth = Dimensions.get('window').width;
 import { SvgXml } from 'react-native-svg';
-import { mobile_svg, profileSVG, historySVG,settingsSVG, price_chartSVG, reportSVG, eye, eyeoff } from '../../assets/ALLSVG';
+import { mobile_svg, profileSVG, historySVG, settingsSVG, price_chartSVG, reportSVG, eye, eyeoff } from '../../assets/ALLSVG';
+import Type1 from '../ServiceForm/Type1';
+import ImagePicker from '../screen/ImagePicker';
 
 const Tab = createBottomTabNavigator();
 
@@ -148,7 +150,7 @@ function TabNavigator() {
               </TouchableOpacity>
             );
           }
-          else if (route.name === 'Details' || route.name === 'ServiceForm') {
+          else if (route.name === 'Details' || route.name === 'ServiceForm' || route.name === 'Type1' || route.name === 'ImagePicker') {
             return (null)
           }
           else {
@@ -274,7 +276,22 @@ function TabNavigator() {
           headerTitle: '',
         }}
       />
-
+      <Tab.Screen
+        name="Type1"
+        component={Type1}
+        options={{
+          tabBarButton: () => null,
+          headerTitle: '',
+        }}
+      />
+      <Tab.Screen
+        name="ImagePicker"
+        component={ImagePicker}
+        options={{
+          tabBarButton: () => null,
+          headerTitle: '',
+        }}
+      />
 
     </Tab.Navigator>
   );

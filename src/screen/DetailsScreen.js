@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     width: (width / 3) - 28,
     borderTopWidth: 2,
     borderTopColor: '#009743',
-    // height: 40,
+    height: 55,
     borderLeftWidth: 2,
     borderRightWidth: 2,
     justifyContent: 'center',

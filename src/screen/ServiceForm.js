@@ -2,7 +2,8 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, BackHandler, Dimen
 import React, { useState, useCallback, useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
-
+import axios from 'axios';
+import qs from 'qs';
 const { width } = Dimensions.get('window');
 import { SvgXml } from 'react-native-svg';
 import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG } from '../../assets/ALLSVG';
@@ -29,7 +30,14 @@ const ServiceForm = ({ route, navigation }) => {
         }, [navigation])
     );
 return(
-    <Type1 label={service_data.name +" @ "+ service_data.offer_price} cardtype="Pan" />
+    <Type1 label={service_data.name +" @ "+ service_data.offer_price} 
+    
+    form_service_code={service_data.form_service_code} 
+    form_service_id={service_data.form_service_id} 
+    form_sub_service_id={service_data.form_sub_service_id} 
+    navigation={navigation}
+    
+    cardtype="Pan" />
 )
     
 };

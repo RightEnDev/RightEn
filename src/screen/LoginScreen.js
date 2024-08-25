@@ -72,6 +72,8 @@ const LoginScreen = ({ navigation }) => {
       if (response.data.data.status) {
         await AsyncStorage.setItem('userEmail', response.data.data.email);
         await AsyncStorage.setItem('userPassword', password);
+        await AsyncStorage.setItem('us_id', response.data.data.id);
+        
         showSuccessToast();
         setTimeout(() => {
           navigation.navigate('Home');
