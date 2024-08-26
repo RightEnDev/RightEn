@@ -647,6 +647,8 @@ import {
   ActivityIndicator,
   FlatList,Dimensions,
 } from 'react-native';
+import Toast from 'react-native-toast-message';
+
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { SvgXml } from 'react-native-svg';
 import { ImageCompressor } from 'react-native-compressor';
@@ -764,6 +766,20 @@ const ImagePicker = ({route ,navigation}) => {
       });
     }
   };
+  const showSuccessToast = () => {
+    Toast.show({
+        type: 'success',
+        text1: `successfull ✅  `,
+        text2: `Image upload successfully !`,
+    });
+};
+const showErrorToast = (message) => {
+    Toast.show({
+        type: 'error',
+        text1: 'Oops! 😔',
+        text2: `${message}`,
+    });
+};
 
   const uploadPhotos = async () => {
     setLoading(true); // Start loading indicator
@@ -777,7 +793,9 @@ const ImagePicker = ({route ,navigation}) => {
           if (uri) {
             const fileExtension = uri.split('.').pop().toLowerCase();
             if (fileExtension !== 'jpeg' && fileExtension !== 'jpg') {
-              Alert.alert('Unsupported File Type', 'Only JPG and JPEG images are supported.');
+              showErrorToast('Unsupported File Type', 'Only JPG and JPEG images are supported.')
+
+              // Alert.alert('Unsupported File Type', 'Only JPG and JPEG images are supported.');
               setLoading(false); // Stop loading indicator
               return;
             }
@@ -802,10 +820,11 @@ const ImagePicker = ({route ,navigation}) => {
         if (response.status === 200) {
           console.log('Photos uploaded successfully');
           console.log(response.data);
-          Alert.alert('Success', 'Photos uploaded successfully.');
+          showSuccessToast();
         } else {
           console.error('Failed to upload photos', response.status, response.statusText);
-          Alert.alert('Upload Error', 'Failed to upload photos. Please try again later.');
+          showErrorToast('Failed to upload photos. Please try again later.')
+          // Alert.alert('Upload Error', 'Failed to upload photos. Please try again later.');
         }
       } catch (error) {
         if (retry > 0) {
@@ -822,13 +841,19 @@ const ImagePicker = ({route ,navigation}) => {
     const handleError = (error) => {
       if (error.response) {
         console.error('Server Error:', error.response.status, error.response.data);
-        Alert.alert('Upload Error', `Server error: ${error.response.status}`);
+        showErrorToast('server error.')
+
+        // Alert.alert('Upload Error', `Server error: ${error.response.status}`);
       } else if (error.request) {
         console.error('No Response Received:', error.request);
-        Alert.alert('Network Error', 'No response from server. Please check your network connection.');
+        showErrorToast('network error.')
+
+        // Alert.alert('Network Error', 'No response from server. Please check your network connection.');
       } else {
         console.error('Error uploading photos:', error.message);
-        Alert.alert('Upload Error', 'An unexpected error occurred while uploading photos.');
+        showErrorToast('Upload Error', 'An unexpected error occurred.')
+
+        // Alert.alert('Upload Error', 'An unexpected error occurred while uploading photos.');
       }
     };
 
@@ -847,6 +872,7 @@ const ImagePicker = ({route ,navigation}) => {
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" /> // Show loading indicator
       ) : null}
+      <Toast/>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
