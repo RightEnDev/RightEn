@@ -73,7 +73,7 @@ const LoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('userEmail', response.data.data.email);
         await AsyncStorage.setItem('userPassword', password);
         await AsyncStorage.setItem('us_id', response.data.data.id);
-        
+
         showSuccessToast();
         setTimeout(() => {
           navigation.navigate('Home');
@@ -108,7 +108,7 @@ const LoginScreen = ({ navigation }) => {
       >
         <Toast />
       </View>
-{/* <Toast /> */}
+      {/* <Toast /> */}
       <View style={styles.container}>
         <View style={styles.inner_container}>
           <Image source={LOGO} style={styles.logo_image} />

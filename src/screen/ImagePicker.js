@@ -644,14 +644,19 @@ import {
   Alert,
   ScrollView,
   TouchableOpacity,
+  ActivityIndicator,
   FlatList,Dimensions,
 } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { SvgXml } from 'react-native-svg';
 import { ImageCompressor } from 'react-native-compressor';
 const screenWidth =  Dimensions.get('window').width;
+import axios from 'axios';
 // console.log(screenWidth);
-const ImagePicker = () => {
+const ImagePicker = ({route ,navigation}) => {
+  const { txn_id } = route.params;
+  console.log(txn_id);
+  const [loading, setLoading] = useState(false);
   const [photoUris, setPhotoUris] = useState([]);
 
   const requestCameraPermission = async () => {
@@ -677,6 +682,7 @@ const ImagePicker = () => {
 
   const handleChooseImage = async (option) => {  
     const compressImageUnder2MB = async (uri) => {
+      console.log("compressImageUnder2MB called");
       let quality = 1.0;
       let compressedImageUri;
       let fileSize;
@@ -684,7 +690,7 @@ const ImagePicker = () => {
       do {
         compressedImageUri = await ImageCompressor.compress(uri, {
           compressionMethod: 'auto', // Use auto compression
-          quality: quality * 100, // quality should be between 0-100
+          quality: quality * 80, // quality should be between 0-100
         });
   
         // Get the file size of the compressed image
@@ -759,6 +765,78 @@ const ImagePicker = () => {
     }
   };
 
+  const uploadPhotos = async () => {
+    setLoading(true); // Start loading indicator
+
+    const attemptUpload = async (retry = 2, delay = 3000) => {
+      try {
+        const formData = new FormData();
+
+        for (let i = 0; i < photoUris.length; i++) {
+          const uri = photoUris[i];
+          if (uri) {
+            const fileExtension = uri.split('.').pop().toLowerCase();
+            if (fileExtension !== 'jpeg' && fileExtension !== 'jpg') {
+              Alert.alert('Unsupported File Type', 'Only JPG and JPEG images are supported.');
+              setLoading(false); // Stop loading indicator
+              return;
+            }
+
+            const mimeType = 'image/jpeg';
+
+            formData.append('files[]', {
+              uri: uri.startsWith('file://') ? uri : `file://${uri}`,
+              type: mimeType,
+              name: `photo_${i}.${fileExtension}`,
+            });
+          }
+        }
+
+        const response = await axios.post('https://righten.in/api/services/pancard/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          timeout: 15000,
+        });
+
+        if (response.status === 200) {
+          console.log('Photos uploaded successfully');
+          console.log(response.data);
+          Alert.alert('Success', 'Photos uploaded successfully.');
+        } else {
+          console.error('Failed to upload photos', response.status, response.statusText);
+          Alert.alert('Upload Error', 'Failed to upload photos. Please try again later.');
+        }
+      } catch (error) {
+        if (retry > 0) {
+          console.log('Retrying upload...');
+          setTimeout(() => attemptUpload(retry - 1, delay), delay);
+        } else {
+          handleError(error);
+        }
+      } finally {
+        setLoading(false); // Stop loading indicator regardless of success or failure
+      }
+    };
+
+    const handleError = (error) => {
+      if (error.response) {
+        console.error('Server Error:', error.response.status, error.response.data);
+        Alert.alert('Upload Error', `Server error: ${error.response.status}`);
+      } else if (error.request) {
+        console.error('No Response Received:', error.request);
+        Alert.alert('Network Error', 'No response from server. Please check your network connection.');
+      } else {
+        console.error('Error uploading photos:', error.message);
+        Alert.alert('Upload Error', 'An unexpected error occurred while uploading photos.');
+      }
+    };
+
+    await attemptUpload(5); // Attempt upload with a retry mechanism
+  };
+
+  
+
   const renderItem = ({ item }) => (
     <Image source={{ uri: item }} style={styles.image} />
   );
@@ -766,7 +844,9 @@ const ImagePicker = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.item}>Upload Documents<Text style={{color:'red'}}>*</Text></Text>
-
+      {loading ? (
+        <ActivityIndicator size="large" color="#0000ff" /> // Show loading indicator
+      ) : null}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
@@ -807,7 +887,7 @@ const ImagePicker = () => {
         contentContainerStyle={styles.scrollContainer}
       />
 
-      <TouchableOpacity onPress={() => { console.log("press"); }}>
+      <TouchableOpacity onPress={uploadPhotos}>
         <View style={{backgroundColor:'#FFCB0A',margin:10,marginTop:30,alignItems:'center',justifyContent:'center',height:70,width:'70%',alignSelf:'center'
           ,borderRadius:15
         }}>

@@ -36,6 +36,7 @@ return(
     form_service_id={service_data.form_service_id} 
     form_sub_service_id={service_data.form_sub_service_id} 
     navigation={navigation}
+    formSubmitUrl ="https://righten.in/api/services/pancard/save"
     
     cardtype="Pan" />
 )

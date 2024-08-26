@@ -8,8 +8,9 @@ import qs from 'qs';
 const { width } = Dimensions.get('window');
 import { SvgXml } from 'react-native-svg';
 import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG, serviceSVG } from '../../assets/ALLSVG';
+import Toast from 'react-native-toast-message';
 
-const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_service_id ,navigation }) => {
+const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_service_id, formSubmitUrl, navigation }) => {
     // console.log("hello");
     // console.log(form_service_code,form_sub_service_id,form_service_id);
     const [formResponse, setformResponse] = useState([]);
@@ -26,6 +27,19 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
     const [fatherName, setFatherName] = useState('');
     const [mobileNo, setMobileNo] = useState('');
 
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                navigation.navigate('main');
+                return true;
+            };
+
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }, [navigation])
+    );
+
     const handleDateChange = (event, date) => {
         setShowPicker(false);
         if (date) {
@@ -33,6 +47,20 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
             setDob(formattedDate);
             setSelectedDate(date);
         }
+    };
+    const showSuccessToast = (txn_id) => {
+        Toast.show({
+            type: 'success',
+            text1: `successfull ✅  id:${txn_id}`,
+            text2: `Form submitted successfully !`,
+        });
+    };
+    const showErrorToast = (txn_id) => {
+        Toast.show({
+            type: 'error',
+            text1: 'Oops! 😔',
+            text2: 'Something went wrong. Please try again.',
+        });
     };
 
     const handleSubmit = async () => {
@@ -44,7 +72,7 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
         if (isNaN(month) || month < 1 || month > 12 || isNaN(day) || day < 1 || day > 31) {
             Alert.alert("Validation Error", "The month or day is out of range");
         }
-        else{
+        else {
             const user_id = await AsyncStorage.getItem('us_id');
             const dateOfBirth = YYYY + '-' + MM + '-' + DD;
 
@@ -57,37 +85,48 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
                 fatherName &&
                 dateOfBirth &&
                 mobileNo
-            ){
-                
-            console.log('Submitted Data:', { user_id, panType, name, dateOfBirth, fatherName, mobileNo });
-    
-            const response = await axios.post('https://righten.in/api/services/pancard/save',
-                qs.stringify({
-                    user_id: user_id,
-                    service_id: form_service_id,
-                    service_code: form_service_code,
-                    sub_service_id: form_sub_service_id,
-                    name: name,
-                    father_name: fatherName,
-                    date_of_birth: dateOfBirth,
-                    mobile: mobileNo,
-    
-                }),
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
+            ) {
+
+                console.log('Submitted Data:', { user_id, panType, name, dateOfBirth, fatherName, mobileNo });
+
+                const response = await axios.post(formSubmitUrl,
+                    qs.stringify({
+                        user_id: user_id,
+                        service_id: form_service_id,
+                        service_code: form_service_code,
+                        sub_service_id: form_sub_service_id,
+                        name: name,
+                        father_name: fatherName,
+                        date_of_birth: dateOfBirth,
+                        mobile: mobileNo,
+
+                    }),
+                    {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }
+                );
+
+                if (response.data.status === 'success') {
+                    setformResponse(response.data.data);
+                    showSuccessToast(response.data.data.txn_id);
+
+                    navigation.navigate('ImagePicker',{ 
+                        "txn_id": response.data.data.txn_id,  
+                      });
+
+
+                } else {
+                    showErrorToast();
                 }
-            );
-            console.log(response.data.data);
-            setformResponse(response.data.data);
-            navigation.navigate('ImagePicker');
+                console.log(response.data.status === 'success');
             } else {
                 Alert.alert("Enter all field");
 
             }
         }
-        
+
 
 
     };
@@ -108,6 +147,8 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
                     <Text style={[styles.input, { fontSize: 24, fontWeight: 'bold', fontFamily: 'BAUHS93', }]}>{label}</Text>
 
                 </View>
+                <Toast />
+
 
                 <Text style={styles.label}>Name <Text style={{ color: 'red' }}>*</Text></Text>
                 <View style={styles.input_view}>
@@ -121,7 +162,7 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
                         onChangeText={setName}
                         placeholder="Enter Name"
                         placeholderTextColor="black"
-                        
+
                     />
                 </View>
 
