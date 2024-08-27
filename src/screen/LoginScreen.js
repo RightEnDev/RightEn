@@ -35,7 +35,6 @@ const LoginScreen = ({ navigation }) => {
       text1: 'Oops! 😔',
       text2: 'Something went wrong. Please try again.',
       // position: 'top', // or 'bottom'
-
     });
   };
 

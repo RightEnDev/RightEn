@@ -38,7 +38,7 @@
 //       return false;
 //     }
 //   };
-  
+
 //   const handleChooseImage = async (option) => {
 //     if (option === 'camera') {
 //       const hasPermission = await requestCameraPermission();
@@ -67,11 +67,11 @@
 //       });
 //     }
 //   };
-  
+
 //   const showOptions = () => {
 //     const options = ['Take Photo', 'Choose from Gallery', 'Cancel'];
 //     const cancelButtonIndex = 2;
-  
+
 //     if (Platform.OS === 'ios') {
 //       ActionSheetIOS.showActionSheetWithOptions(
 //         {
@@ -645,19 +645,22 @@ import {
   ScrollView,
   TouchableOpacity,
   ActivityIndicator,
-  FlatList,Dimensions,
+  FlatList, Dimensions,
 } from 'react-native';
 import Toast from 'react-native-toast-message';
 
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { SvgXml } from 'react-native-svg';
 import { ImageCompressor } from 'react-native-compressor';
-const screenWidth =  Dimensions.get('window').width;
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+
+const screenWidth = Dimensions.get('window').width;
 import axios from 'axios';
 // console.log(screenWidth);
-const ImagePicker = ({route ,navigation}) => {
-  const { txn_id } = route.params;
-  console.log(txn_id);
+const ImagePicker = ({ route, navigation }) => {
+  const { txn_id,pan_form_id } = route.params;
+  // console.log(txn_id);
   const [loading, setLoading] = useState(false);
   const [photoUris, setPhotoUris] = useState([]);
 
@@ -682,29 +685,29 @@ const ImagePicker = ({route ,navigation}) => {
     }
   };
 
-  const handleChooseImage = async (option) => {  
+  const handleChooseImage = async (option) => {
     const compressImageUnder2MB = async (uri) => {
       console.log("compressImageUnder2MB called");
       let quality = 1.0;
       let compressedImageUri;
       let fileSize;
-  
+
       do {
         compressedImageUri = await ImageCompressor.compress(uri, {
           compressionMethod: 'auto', // Use auto compression
           quality: quality * 80, // quality should be between 0-100
         });
-  
+
         // Get the file size of the compressed image
         const stats = await RNFetchBlob.fs.stat(compressedImageUri);
         fileSize = stats.size;
-  
+
         quality -= 0.1; // Reduce quality by 10% on each iteration if needed
       } while (fileSize > 2 * 1024 * 1024 && quality > 0);
-  
+
       return compressedImageUri;
     };
-  
+
     if (option === 'camera') {
       const hasPermission = await requestCameraPermission();
       if (hasPermission) {
@@ -716,15 +719,15 @@ const ImagePicker = ({route ,navigation}) => {
           } else {
             const imageSize = response.assets[0].fileSize; // Get the original image size in bytes
             console.log(`Original Image Size: ${(imageSize / (1024 * 1024)).toFixed(2)} MB`); // Log original size in MB
-  
+
             if (imageSize > 2 * 1024 * 1024) { // 2 MB in bytes
               try {
                 const compressedImageUri = await compressImageUnder2MB(response.assets[0].uri);
-  
+
                 Image.getSize(compressedImageUri, (width, height) => {
                   console.log(`Compressed Image Size: Width = ${width}, Height = ${height}`);
                 });
-  
+
                 setPhotoUris((prevUris) => [...prevUris, compressedImageUri]);
               } catch (error) {
                 Alert.alert('Compression Error', error.message);
@@ -746,15 +749,15 @@ const ImagePicker = ({route ,navigation}) => {
         } else {
           const imageSize = response.assets[0].fileSize; // Get the original image size in bytes
           console.log(`Original Image Size: ${(imageSize / (1024 * 1024)).toFixed(2)} MB`); // Log original size in MB
-  
+
           if (imageSize > 2 * 1024 * 1024) { // 2 MB in bytes
             try {
               const compressedImageUri = await compressImageUnder2MB(response.assets[0].uri);
-  
+
               Image.getSize(compressedImageUri, (width, height) => {
                 console.log(`Compressed Image Size: Width = ${width}, Height = ${height}`);
               });
-  
+
               setPhotoUris((prevUris) => [...prevUris, compressedImageUri]);
             } catch (error) {
               Alert.alert('Compression Error', error.message);
@@ -768,25 +771,29 @@ const ImagePicker = ({route ,navigation}) => {
   };
   const showSuccessToast = () => {
     Toast.show({
-        type: 'success',
-        text1: `successfull ✅  `,
-        text2: `Image upload successfully !`,
+      type: 'success',
+      text1: `successfull ✅  `,
+      text2: `Image upload successfully !`,
     });
-};
-const showErrorToast = (message) => {
+  };
+  const showErrorToast = (message) => {
     Toast.show({
-        type: 'error',
-        text1: 'Oops! 😔',
-        text2: `${message}`,
+      type: 'error',
+      text1: 'Oops! 😔',
+      text2: `${message}`,
     });
-};
+  };
 
   const uploadPhotos = async () => {
     setLoading(true); // Start loading indicator
 
     const attemptUpload = async (retry = 2, delay = 3000) => {
       try {
+        const us_id = await AsyncStorage.getItem('us_id');
+
         const formData = new FormData();
+        formData.append('user_id', userId);
+        formData.append('pan_form_id', pan_form_id);
 
         for (let i = 0; i < photoUris.length; i++) {
           const uri = photoUris[i];
@@ -860,7 +867,7 @@ const showErrorToast = (message) => {
     await attemptUpload(5); // Attempt upload with a retry mechanism
   };
 
-  
+
 
   const renderItem = ({ item }) => (
     <Image source={{ uri: item }} style={styles.image} />
@@ -868,11 +875,11 @@ const showErrorToast = (message) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.item}>Upload Documents<Text style={{color:'red'}}>*</Text></Text>
+      <Text style={styles.item}>Upload Documents<Text style={{ color: 'red' }}>*</Text></Text>
       {loading ? (
         <ActivityIndicator size="large" color="#0000ff" /> // Show loading indicator
       ) : null}
-      <Toast/>
+      <Toast />
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           style={styles.button}
@@ -914,10 +921,11 @@ const showErrorToast = (message) => {
       />
 
       <TouchableOpacity onPress={uploadPhotos}>
-        <View style={{backgroundColor:'#FFCB0A',margin:10,marginTop:30,alignItems:'center',justifyContent:'center',height:70,width:'70%',alignSelf:'center'
-          ,borderRadius:15
+        <View style={{
+          backgroundColor: '#FFCB0A', margin: 10, marginTop: 30, alignItems: 'center', justifyContent: 'center', height: 70, width: '70%', alignSelf: 'center'
+          , borderRadius: 15
         }}>
-          <Text style={{ height: 50,textAlign: 'center', fontSize: 30, fontWeight: 'bold', color: 'black' }}>submit</Text>
+          <Text style={{ height: 50, textAlign: 'center', fontSize: 30, fontWeight: 'bold', color: 'black' }}>submit</Text>
         </View>
 
       </TouchableOpacity>
@@ -940,13 +948,13 @@ const styles = StyleSheet.create({
     fontSize: 34,
     fontWeight: 'bold',
     textAlign: 'center',
-    color:'#009743'
+    color: '#009743'
   },
   image: {
-    width: screenWidth/3,
-    marginRight:'2%',
+    width: screenWidth / 3,
+    marginRight: '2%',
     height: undefined,
-    aspectRatio:1,
+    aspectRatio: 1,
     marginTop: 20,
     alignSelf: 'center',
   },
