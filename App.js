@@ -1,7 +1,10 @@
-import { StyleSheet, StatusBar, View } from 'react-native'
+import { StyleSheet, StatusBar, Text, Image, View, Dimensions, SafeAreaView } from 'react-native'
 import React, { useState } from 'react'
 import AppNav from './src/navigation/AppNav'
 import axios from 'axios'
+const LOGO = require('./assets/images/logo.png');
+const { width, height } = Dimensions.get('window');
+
 const App = () => {
   const [load, setload] = useState(false);
 
@@ -30,104 +33,37 @@ const App = () => {
 
   return (
     <View style={{ flex: 1 }}>
-      {load ? <AppNav /> : null}
+      {load ?
+        <AppNav />
+        :
+        <>
+          <View style={styles.container}>
+            <Image
+              source={LOGO} // Replace with your image URL
+              style={[styles.image, { width: width * 0.8, height: height * 0.4 }]} // Adjust size as needed
+              resizeMode="contain" // You can use other modes like 'cover', 'stretch', etc.
+            />
+          </View>
+        </>
+      }
+      {/* {load ? <AppNav /> : null} */}
+
     </View>
     // <AppNav />
-    /* <StatusBar
-      barStyle="light-content" // Light text for dark backgrounds
-      backgroundColor="#EE303B" // StatusBar background color
-    /> */
+
   )
 }
 
 export default App
 
-const styles = StyleSheet.create({})
-
-
-
-// import { Button, StyleSheet, Text, View } from 'react-native'
-// import React from 'react'
-// import PhonePePaymentSDK from 'react-native-phonepe-pg'
-// import base64 from 'react-native-base64';
-// // import sha256 from 'sha256';
-// import { sha256, sha256Bytes } from 'react-native-sha256';
-// import AsyncStorage from '@react-native-async-storage/async-storage';
-// import axios from 'axios';
-// import qs from 'qs';
-
-
-// const App = () => {
-
-//   const payinititate = async() => {
-//     console.log("started");
-//     PhonePePaymentSDK.init(
-//       "PRODUCTION",
-//       'M22BD1522HQFO',
-//       null,
-//       true
-//     ).then(async(result) => {
-//       console.log("init done");
-//       const us_id = await AsyncStorage.getItem('us_id');
-
-
-//     const response = await axios.post('https://righten.in/api/services/pancard/payment_pg',
-//         qs.stringify({
-//           txn_id:'PAN2100785215'+Math.floor(Math.random() * 9000) + 1000
-//           ,
-//           user_id: us_id,
-//           amount: 1,
-//           mobile: 8436201492
-//         }),
-//         {
-//           headers: {
-//             'Content-Type': 'application/x-www-form-urlencoded',
-//           },
-//         }
-//       );
-
-//       console.log(base64.decode(response.data.encoded));
-    
-
-//       PhonePePaymentSDK.startTransaction(response.data.encoded, response.data.final_x_header, null, null)
-//         .then((a) => {
-//           console.log('*****************')
-
-//           console.log(a)
-//         })
-//         .catch((err) => {
-//           console.log("------------------------------");
-
-//           console.log("here");
-//           console.log(err);
-//         })
-
-
-
-      
-
-//     }).catch((err) => {
-//       console.log("here--------");
-//       console.log(err);
-//     })
-//   }
-//   return (
-//     <View style={{
-//       justifyContent: 'center', alignItems: 'center', marginTop: '30%'
-
-//     }}>
-//       <Text>App</Text>
-//       <Button title='pay' onPress={payinititate} />
-//     </View>
-//   )
-// }
-
-// export default App
-
-// const styles = StyleSheet.create({})
-
-
-
-
-
-
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#CFF7FF'
+  },
+  image: {
+    // width and height are controlled in the Image component inline style
+  },
+});

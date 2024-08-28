@@ -14,6 +14,7 @@ import Profile from '../screen/Profile';
 import PriceChart from '../screen/PriceChart';
 import History from '../screen/History';
 import Settings from '../screen/Settings';
+import Register from '../screen/Register';
 
 const Stack = createNativeStackNavigator();
 
@@ -45,6 +46,8 @@ function StackNavigator(props) {
     >
       <Stack.Screen name="Splash" component={Splash} />
       <Stack.Screen name="LoginScreen" component={LoginScreen} />
+      <Stack.Screen name="Register" component={Register} />
+
 
       <Stack.Screen name="Home" component={TabNavigator} />
       <Stack.Screen name="Example1" component={Profile} />
