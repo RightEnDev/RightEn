@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, FlatList } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, FlatList, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { BackHandler } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -73,7 +73,7 @@ const History = ({ navigation }) => {
   useEffect(() => {
     // console.log("trying");
     fetchData();
-  }, [isFocused, startDate, endDate,value]);
+  }, [isFocused, startDate, endDate, value]);
 
   const handleStartDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
@@ -121,22 +121,29 @@ const History = ({ navigation }) => {
   const renderItem = ({ item }) => {
     return (
       <View>
-        {/* <Text>{item.id}</Text> */}
         <View style={{
-          // flex: 1,
-           flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10,
+          flexDirection: 'row',
+          padding: 10,
           borderBottomWidth: 1
         }}>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: '20%', borderRightWidth: 1 }}>{item.user_id}</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'center', width: '35%', marginLeft: '2%', borderRightWidth: 1 }}>{item.service_name}</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: '19%', marginLeft: '2%', borderRightWidth: 1 }}>{item.amount}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, borderRightWidth: 1 }}>{item.user_id}</Text>
+
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>{item.service_name}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10, borderRightWidth: 1 }}>{item.amount}</Text>
 
           <Text style={{
-            fontSize: 18, color: 'black', textAlign: 'center', width: '20%', marginLeft: '2%',
+            fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10, 
             backgroundColor: item.status === 'Success' ? '#22cc62' : 'red',
             color: 'white', fontWeight: 'bold',
 
           }}>{item.status}</Text>
+
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10,borderLeftWidth:1, borderRightWidth: 1 ,paddingLeft:10}}>{item.userMobile}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1 }}>{item.sub_service}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 250, marginLeft: 10, borderRightWidth: 1 }}>{item.txn_id}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>{item.utr}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1 }}>{item.date}</Text>
+
         </View>
 
       </View>
@@ -150,18 +157,26 @@ const History = ({ navigation }) => {
     return (
       <View>
         <View style={{
-           flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10,
+          flexDirection: 'row',
+          padding: 10,
           borderBottomWidth: 1
         }}>
-          <Text style={{ fontSize: 18, color: 'black', textAlign:'left', width: '20%', borderRightWidth: 1 }}> Id</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'center', width: '35%', marginLeft: '2%', borderRightWidth: 1 }}>Service Name</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: '19%', marginLeft: '2%', borderRightWidth: 1 }}>Amount</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, borderRightWidth: 1 }}>Id</Text>
+
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>Service Name</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10, borderRightWidth: 1 }}>amount</Text>
 
           <Text style={{
-            fontSize: 18, color: 'black', textAlign: 'center', width: '20%', marginLeft: '2%',
-            color: 'black', fontWeight: 'bold',
+            fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10, 
 
           }}>status</Text>
+
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10,borderLeftWidth:1, borderRightWidth: 1 ,paddingLeft:10}}>Mobile</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1 }}>Sub Service</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 250, marginLeft: 10, borderRightWidth: 1 }}>Transaction id</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>payment no</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1 }}>date</Text>
+
         </View>
 
       </View>
@@ -182,14 +197,14 @@ const History = ({ navigation }) => {
               borderWidth: 2,
               padding: 5,
               paddingVertical: 10,
-              paddingLeft: 10,
-              paddingRight: 10,
+              paddingLeft: 20,
+              paddingRight: 20,
               borderRadius: 15,
               backgroundColor: '#FFCB0A',
               justifyContent: 'space-evenly',
               alignItems: 'center'
             }}>
-              <Text style={styles.dateButton}>Pick Start Date</Text>
+              <Text style={styles.dateButton}>Start Date</Text>
               <SvgXml xml={`<svg fill="#000000" width="25px" height="25px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M960 95.888l-256.224.001V32.113c0-17.68-14.32-32-32-32s-32 14.32-32 32v63.76h-256v-63.76c0-17.68-14.32-32-32-32s-32 14.32-32 32v63.76H64c-35.344 0-64 28.656-64 64v800c0 35.343 28.656 64 64 64h896c35.344 0 64-28.657 64-64v-800c0-35.329-28.656-63.985-64-63.985zm0 863.985H64v-800h255.776v32.24c0 17.679 14.32 32 32 32s32-14.321 32-32v-32.224h256v32.24c0 17.68 14.32 32 32 32s32-14.32 32-32v-32.24H960v799.984zM736 511.888h64c17.664 0 32-14.336 32-32v-64c0-17.664-14.336-32-32-32h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32zm0 255.984h64c17.664 0 32-14.32 32-32v-64c0-17.664-14.336-32-32-32h-64c-17.664 0-32 14.336-32 32v64c0 17.696 14.336 32 32 32zm-192-128h-64c-17.664 0-32 14.336-32 32v64c0 17.68 14.336 32 32 32h64c17.664 0 32-14.32 32-32v-64c0-17.648-14.336-32-32-32zm0-255.984h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32h64c17.664 0 32-14.336 32-32v-64c0-17.68-14.336-32-32-32zm-256 0h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32h64c17.664 0 32-14.336 32-32v-64c0-17.68-14.336-32-32-32zm0 255.984h-64c-17.664 0-32 14.336-32 32v64c0 17.68 14.336 32 32 32h64c17.664 0 32-14.32 32-32v-64c0-17.648-14.336-32-32-32z"></path></g></svg>`} />
 
 
@@ -215,14 +230,14 @@ const History = ({ navigation }) => {
               borderWidth: 2,
               padding: 5,
               paddingVertical: 10,
-              paddingLeft: 10,
-              paddingRight: 10,
+              paddingLeft: 20,
+              paddingRight: 20,
               borderRadius: 15,
               backgroundColor: '#FFCB0A',
               justifyContent: 'space-evenly',
               alignItems: 'center'
             }}>
-              <Text style={styles.dateButton}>Pick End Date</Text>
+              <Text style={styles.dateButton}>End Date</Text>
               <SvgXml xml={`<svg fill="#000000" width="25px" height="25px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M960 95.888l-256.224.001V32.113c0-17.68-14.32-32-32-32s-32 14.32-32 32v63.76h-256v-63.76c0-17.68-14.32-32-32-32s-32 14.32-32 32v63.76H64c-35.344 0-64 28.656-64 64v800c0 35.343 28.656 64 64 64h896c35.344 0 64-28.657 64-64v-800c0-35.329-28.656-63.985-64-63.985zm0 863.985H64v-800h255.776v32.24c0 17.679 14.32 32 32 32s32-14.321 32-32v-32.224h256v32.24c0 17.68 14.32 32 32 32s32-14.32 32-32v-32.24H960v799.984zM736 511.888h64c17.664 0 32-14.336 32-32v-64c0-17.664-14.336-32-32-32h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32zm0 255.984h64c17.664 0 32-14.32 32-32v-64c0-17.664-14.336-32-32-32h-64c-17.664 0-32 14.336-32 32v64c0 17.696 14.336 32 32 32zm-192-128h-64c-17.664 0-32 14.336-32 32v64c0 17.68 14.336 32 32 32h64c17.664 0 32-14.32 32-32v-64c0-17.648-14.336-32-32-32zm0-255.984h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32h64c17.664 0 32-14.336 32-32v-64c0-17.68-14.336-32-32-32zm-256 0h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32h64c17.664 0 32-14.336 32-32v-64c0-17.68-14.336-32-32-32zm0 255.984h-64c-17.664 0-32 14.336-32 32v64c0 17.68 14.336 32 32 32h64c17.664 0 32-14.32 32-32v-64c0-17.648-14.336-32-32-32z"></path></g></svg>`} />
 
 
@@ -262,19 +277,20 @@ const History = ({ navigation }) => {
         <Text style={styles.search_button}>Search</Text>
       </TouchableOpacity> */}
 
-      <View style={{ marginTop: 30,
-      paddingBottom:150
-         }}>
-        <HeaderItem/>
-        <FlatList
-          data={data}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id.toString()}
-          // ListHeaderComponent={headerItem}
-        />
-        {/* <Text>hello</Text> */}
+      <ScrollView horizontal showsHorizontalScrollIndicator={true}>
 
-      </View>
+        <View style={{ flexDirection: 'column', marginTop: 30, width: 1500 }}>
+<HeaderItem/>
+          <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id.toString()}
+            showsVerticalScrollIndicator={false}
+
+          // scrollEnabled={false}
+          />
+        </View>
+      </ScrollView>
     </View>
   );
 }
