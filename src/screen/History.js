@@ -132,13 +132,13 @@ const History = ({ navigation }) => {
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10, borderRightWidth: 1 }}>{item.amount}</Text>
 
           <Text style={{
-            fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10, 
+            fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10,
             backgroundColor: item.status === 'Success' ? '#22cc62' : 'red',
             color: 'white', fontWeight: 'bold',
 
           }}>{item.status}</Text>
 
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10,borderLeftWidth:1, borderRightWidth: 1 ,paddingLeft:10}}>{item.userMobile}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderLeftWidth: 1, borderRightWidth: 1, paddingLeft: 10 }}>{item.userMobile}</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1 }}>{item.sub_service}</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 250, marginLeft: 10, borderRightWidth: 1 }}>{item.txn_id}</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>{item.utr}</Text>
@@ -167,11 +167,11 @@ const History = ({ navigation }) => {
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10, borderRightWidth: 1 }}>amount</Text>
 
           <Text style={{
-            fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10, 
+            fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10,
 
           }}>status</Text>
 
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10,borderLeftWidth:1, borderRightWidth: 1 ,paddingLeft:10}}>Mobile</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderLeftWidth: 1, borderRightWidth: 1, paddingLeft: 10 }}>Mobile</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1 }}>Sub Service</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 250, marginLeft: 10, borderRightWidth: 1 }}>Transaction id</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>payment no</Text>
@@ -279,8 +279,10 @@ const History = ({ navigation }) => {
 
       <ScrollView horizontal showsHorizontalScrollIndicator={true}>
 
-        <View style={{ flexDirection: 'column', marginTop: 30, width: 1500 }}>
-<HeaderItem/>
+        <View style={{ flexDirection: 'column',
+        paddingBottom:10,
+        marginTop: 30, width: 1500 }}>
+          <HeaderItem />
           <FlatList
             data={data}
             renderItem={renderItem}
