@@ -8,6 +8,7 @@ import axios from 'axios';
 import qs from 'qs';
 import { useIsFocused } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 
 const History = ({ navigation }) => {
@@ -25,6 +26,9 @@ const History = ({ navigation }) => {
     { label: 'Option 3', value: 'option3' },
   ]);
 
+  // const [research, serSearch] = useState();
+
+
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -34,17 +38,23 @@ const History = ({ navigation }) => {
       setLoading(true);
 
       setData([]);
+      const us_id = await AsyncStorage.getItem('us_id');
+      // console.log(startDate.toISOString().split('T')[0]);
+      // console.log(endDate.toISOString().split('T')[0]);
       const response = await axios.post('https://righten.in/api/services/report/upi',
         qs.stringify({
-          user_id: 7,
-          service_id: '',
-          from_date: '2024-04-01',
-          to_date: '2024-08-27'
+          user_id: us_id,
+          service_id: value,
+          from_date: startDate.toISOString().split('T')[0],
+          to_date: endDate.toISOString().split('T')[0]
 
         }),
         {
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
+            'Cache-Control': 'no-cache',
+            'Pragma': 'no-cache',
+            'Expires': '0',
           },
         }
       );
@@ -53,7 +63,7 @@ const History = ({ navigation }) => {
         throw new Error('Network response was not ok');
       }
       setData(response.data.data);
-      console.log(data);
+      // console.log(data);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -63,7 +73,7 @@ const History = ({ navigation }) => {
   useEffect(() => {
     // console.log("trying");
     fetchData();
-  }, [isFocused]);
+  }, [isFocused, startDate, endDate,value]);
 
   const handleStartDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || startDate;
@@ -111,12 +121,14 @@ const History = ({ navigation }) => {
   const renderItem = ({ item }) => {
     return (
       <View>
+        {/* <Text>{item.id}</Text> */}
         <View style={{
-          flex: 1, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10,
+          // flex: 1,
+           flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10,
           borderBottomWidth: 1
         }}>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: '15%', borderRightWidth: 1 }}>{item.user_id}</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'center', width: '40%', marginLeft: '2%', borderRightWidth: 1 }}>{item.service_name}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: '20%', borderRightWidth: 1 }}>{item.user_id}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'center', width: '35%', marginLeft: '2%', borderRightWidth: 1 }}>{item.service_name}</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: '19%', marginLeft: '2%', borderRightWidth: 1 }}>{item.amount}</Text>
 
           <Text style={{
@@ -125,6 +137,31 @@ const History = ({ navigation }) => {
             color: 'white', fontWeight: 'bold',
 
           }}>{item.status}</Text>
+        </View>
+
+      </View>
+
+
+    )
+  }
+
+
+  const HeaderItem = () => {
+    return (
+      <View>
+        <View style={{
+           flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', padding: 10,
+          borderBottomWidth: 1
+        }}>
+          <Text style={{ fontSize: 18, color: 'black', textAlign:'left', width: '20%', borderRightWidth: 1 }}> Id</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'center', width: '35%', marginLeft: '2%', borderRightWidth: 1 }}>Service Name</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: '19%', marginLeft: '2%', borderRightWidth: 1 }}>Amount</Text>
+
+          <Text style={{
+            fontSize: 18, color: 'black', textAlign: 'center', width: '20%', marginLeft: '2%',
+            color: 'black', fontWeight: 'bold',
+
+          }}>status</Text>
         </View>
 
       </View>
@@ -145,12 +182,12 @@ const History = ({ navigation }) => {
               borderWidth: 2,
               padding: 5,
               paddingVertical: 10,
-              paddingLeft:10,
-              paddingRight:10,
+              paddingLeft: 10,
+              paddingRight: 10,
               borderRadius: 15,
               backgroundColor: '#FFCB0A',
-              justifyContent:'space-evenly',
-              alignItems:'center'
+              justifyContent: 'space-evenly',
+              alignItems: 'center'
             }}>
               <Text style={styles.dateButton}>Pick Start Date</Text>
               <SvgXml xml={`<svg fill="#000000" width="25px" height="25px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M960 95.888l-256.224.001V32.113c0-17.68-14.32-32-32-32s-32 14.32-32 32v63.76h-256v-63.76c0-17.68-14.32-32-32-32s-32 14.32-32 32v63.76H64c-35.344 0-64 28.656-64 64v800c0 35.343 28.656 64 64 64h896c35.344 0 64-28.657 64-64v-800c0-35.329-28.656-63.985-64-63.985zm0 863.985H64v-800h255.776v32.24c0 17.679 14.32 32 32 32s32-14.321 32-32v-32.224h256v32.24c0 17.68 14.32 32 32 32s32-14.32 32-32v-32.24H960v799.984zM736 511.888h64c17.664 0 32-14.336 32-32v-64c0-17.664-14.336-32-32-32h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32zm0 255.984h64c17.664 0 32-14.32 32-32v-64c0-17.664-14.336-32-32-32h-64c-17.664 0-32 14.336-32 32v64c0 17.696 14.336 32 32 32zm-192-128h-64c-17.664 0-32 14.336-32 32v64c0 17.68 14.336 32 32 32h64c17.664 0 32-14.32 32-32v-64c0-17.648-14.336-32-32-32zm0-255.984h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32h64c17.664 0 32-14.336 32-32v-64c0-17.68-14.336-32-32-32zm-256 0h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32h64c17.664 0 32-14.336 32-32v-64c0-17.68-14.336-32-32-32zm0 255.984h-64c-17.664 0-32 14.336-32 32v64c0 17.68 14.336 32 32 32h64c17.664 0 32-14.32 32-32v-64c0-17.648-14.336-32-32-32z"></path></g></svg>`} />
@@ -173,17 +210,17 @@ const History = ({ navigation }) => {
         {/* End Date Picker */}
         <View style={styles.datePickerWrapper}>
           <TouchableOpacity onPress={() => setShowEndPicker(true)}>
-          <View style={{
+            <View style={{
               flexDirection: 'row',
               borderWidth: 2,
               padding: 5,
               paddingVertical: 10,
-              paddingLeft:10,
-              paddingRight:10,
+              paddingLeft: 10,
+              paddingRight: 10,
               borderRadius: 15,
               backgroundColor: '#FFCB0A',
-              justifyContent:'space-evenly',
-              alignItems:'center'
+              justifyContent: 'space-evenly',
+              alignItems: 'center'
             }}>
               <Text style={styles.dateButton}>Pick End Date</Text>
               <SvgXml xml={`<svg fill="#000000" width="25px" height="25px" viewBox="0 0 1024 1024" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><path d="M960 95.888l-256.224.001V32.113c0-17.68-14.32-32-32-32s-32 14.32-32 32v63.76h-256v-63.76c0-17.68-14.32-32-32-32s-32 14.32-32 32v63.76H64c-35.344 0-64 28.656-64 64v800c0 35.343 28.656 64 64 64h896c35.344 0 64-28.657 64-64v-800c0-35.329-28.656-63.985-64-63.985zm0 863.985H64v-800h255.776v32.24c0 17.679 14.32 32 32 32s32-14.321 32-32v-32.224h256v32.24c0 17.68 14.32 32 32 32s32-14.32 32-32v-32.24H960v799.984zM736 511.888h64c17.664 0 32-14.336 32-32v-64c0-17.664-14.336-32-32-32h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32zm0 255.984h64c17.664 0 32-14.32 32-32v-64c0-17.664-14.336-32-32-32h-64c-17.664 0-32 14.336-32 32v64c0 17.696 14.336 32 32 32zm-192-128h-64c-17.664 0-32 14.336-32 32v64c0 17.68 14.336 32 32 32h64c17.664 0 32-14.32 32-32v-64c0-17.648-14.336-32-32-32zm0-255.984h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32h64c17.664 0 32-14.336 32-32v-64c0-17.68-14.336-32-32-32zm-256 0h-64c-17.664 0-32 14.336-32 32v64c0 17.664 14.336 32 32 32h64c17.664 0 32-14.336 32-32v-64c0-17.68-14.336-32-32-32zm0 255.984h-64c-17.664 0-32 14.336-32 32v64c0 17.68 14.336 32 32 32h64c17.664 0 32-14.32 32-32v-64c0-17.648-14.336-32-32-32z"></path></g></svg>`} />
@@ -221,17 +258,21 @@ const History = ({ navigation }) => {
         {/* {value && <Text style={styles.selectedText}>Selected: {value}</Text>} */}
 
       </View>
-      <TouchableOpacity onPress={() => console.log('press')}>
-        {/* <View></View> */}
-        <Text style={styles.search_button}>Pick Start Date</Text>
-      </TouchableOpacity>
+      {/* <TouchableOpacity onPress={() => console.log('press')}>
+        <Text style={styles.search_button}>Search</Text>
+      </TouchableOpacity> */}
 
-      <View style={{ marginTop: 30 }}>
+      <View style={{ marginTop: 30,
+      paddingBottom:150
+         }}>
+        <HeaderItem/>
         <FlatList
           data={data}
           renderItem={renderItem}
           keyExtractor={(item) => item.id.toString()}
+          // ListHeaderComponent={headerItem}
         />
+        {/* <Text>hello</Text> */}
 
       </View>
     </View>
@@ -264,7 +305,7 @@ const styles = StyleSheet.create({
   dateButton: {
     color: 'black',
     // marginBottom: 10,
-    paddingRight:5,
+    paddingRight: 5,
     fontSize: 20,
 
   },
