@@ -109,10 +109,10 @@ const Register = ({navigation}) => {
         {/* <Toast /> */}
         <View style={styles.container}>
           <View style={styles.inner_container}>
-            <Image source={LOGO} style={styles.logo_image} />
+            {/* <Image source={LOGO} style={styles.logo_image} /> */}
             {/* <Button title="Show toast" onPress={showSuccessToast} /> */}
   
-            <Text style={styles.title}>Login</Text>
+            {/* <Text style={styles.title}>Login</Text> */}
   
             <View style={styles.passwordContainer}>
               <SvgXml xml={mobile_svg} />
@@ -155,24 +155,10 @@ const Register = ({navigation}) => {
             <TouchableOpacity style={styles.login_buton} title="Login" onPress={handleLogin} >
               <Text style={{
                 fontSize: 20, fontFamily: 'BAUHS93', fontWeight: 'bold', color: '#FFFFFF'
-              }}>Log In</Text>
+              }}>Register</Text>
             </TouchableOpacity>
   
-            <TouchableOpacity onPress={()=>{
-              navigation.navigate('Register')
-            }}>
-  
-  
-            <Text style={{
-              fontSize: 20,
-              marginTop:20,
-              marginBottom: 20,
-              textAlign: 'center',
-              color: '#000',
-              // borderBottomWidth:1,
-            }}>Not have an account? Register</Text>
-            </TouchableOpacity>
-  
+            
   
           </View>
         </View>

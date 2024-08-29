@@ -1,5 +1,5 @@
-package com.apprn;
-
+package com.righten;
+import com.reactnativecompressor.CompressorPackage;
 import android.app.Application;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -21,12 +21,14 @@ public class MainApplication extends Application implements ReactApplication {
 
         @Override
         protected List<ReactPackage> getPackages() {
-          @SuppressWarnings("UnnecessaryLocalVariable")
-          List<ReactPackage> packages = new PackageList(this).getPackages();
-          // Packages that cannot be autolinked yet can be added manually here, for example:
-          // packages.add(new MyReactNativePackage());
-          return packages;
-        }
+        @SuppressWarnings("UnnecessaryLocalVariable")
+        List<ReactPackage> packages = new PackageList(this).getPackages();
+        
+        // Add manually linked packages here
+        // packages.add(new CompressorPackage());
+
+        return packages;
+}
 
         @Override
         protected String getJSMainModuleName() {

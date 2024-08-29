@@ -28,7 +28,7 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
     const [mobileNo, setMobileNo] = useState('');
 
     useFocusEffect(
-        useCallback(() => {
+        React.useCallback(() => {
             const onBackPress = () => {
                 navigation.navigate('main');
                 return true;

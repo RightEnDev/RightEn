@@ -1,24 +1,25 @@
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { StyleSheet, Text,Image, View, TextInput, TouchableOpacity, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import React, { useState, useCallback, useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import qs from 'qs';
-const { width } = Dimensions.get('window');
+const { width,height } = Dimensions.get('window');
 import { SvgXml } from 'react-native-svg';
 import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG } from '../../assets/ALLSVG';
 import Type1 from '../ServiceForm/Type1';
+
 // import { useIsFocused } from '@react-navigation/native';
 
 const ServiceForm = ({ route, navigation }) => {
     // const isFocused = useIsFocused();
 
     const { service_code, service_data, app_icon } = route.params;
-    console.log("*************************************");
-    console.log(service_data);
+    // console.log("*************************************");
+    // console.log(service_data);
 
     useFocusEffect(
-        useCallback(() => {
+        React.useCallback(() => {
             const onBackPress = () => {
                 navigation.navigate('main');
                 return true;
@@ -29,18 +30,34 @@ const ServiceForm = ({ route, navigation }) => {
             return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
         }, [navigation])
     );
-return(
-    <Type1 label={service_data.name +" @ "+ service_data.offer_price} 
+    return (
+        service_data.form_service_code === "REPAN" ? (
+            <Type1 
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/pancard/save"
+                cardtype="Pan" 
+            />
+        ) : 
+        <>
+          <View style={{
+            flex: 1,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#fff'
+          }}>
+            <Text style={{fontSize:24,fontWeight:'bold',color:'black',textAlign:'center'
+            }}>
+                This service currently not available
+            </Text>
+          </View>
+        </>
+    );
     
-    form_service_code={service_data.form_service_code} 
-    form_service_id={service_data.form_service_id} 
-    form_sub_service_id={service_data.form_sub_service_id} 
-    navigation={navigation}
-    formSubmitUrl ="https://righten.in/api/services/pancard/save"
-    
-    cardtype="Pan" />
-)
-    
+
 };
 
 export default ServiceForm;
@@ -72,8 +89,8 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderRadius: 5,
         backgroundColor: '#d2d2d2',
-        justifyContent:'center',
-        alignItems:'center'
+        justifyContent: 'center',
+        alignItems: 'center'
 
     },
 
@@ -93,12 +110,12 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         borderRadius: 5,
         alignItems: 'center',
-        marginTop:10,
-        
+        marginTop: 10,
+
     },
     buttonText: {
         color: '#fff',
         fontSize: 20,
-        fontWeight:'bold'
+        fontWeight: 'bold'
     },
 });

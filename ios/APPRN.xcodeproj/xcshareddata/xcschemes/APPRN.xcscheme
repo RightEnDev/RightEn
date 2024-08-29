@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "APPRN.app"
-               BlueprintName = "APPRN"
-               ReferencedContainer = "container:APPRN.xcodeproj">
+               BuildableName = "RIGHTEN.app"
+               BlueprintName = "RIGHTEN"
+               ReferencedContainer = "container:RIGHTEN.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "APPRNTests.xctest"
-               BlueprintName = "APPRNTests"
-               ReferencedContainer = "container:APPRN.xcodeproj">
+               BuildableName = "RIGHTENTests.xctest"
+               BlueprintName = "RIGHTENTests"
+               ReferencedContainer = "container:RIGHTEN.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "APPRN.app"
-            BlueprintName = "APPRN"
-            ReferencedContainer = "container:APPRN.xcodeproj">
+            BuildableName = "RIGHTEN.app"
+            BlueprintName = "RIGHTEN"
+            ReferencedContainer = "container:RIGHTEN.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "APPRN.app"
-            BlueprintName = "APPRN"
-            ReferencedContainer = "container:APPRN.xcodeproj">
+            BuildableName = "RIGHTEN.app"
+            BlueprintName = "RIGHTEN"
+            ReferencedContainer = "container:RIGHTEN.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

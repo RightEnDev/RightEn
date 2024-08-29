@@ -137,16 +137,14 @@ const Profile = ({ navigation }) => {
           <View style={styles.row}>
             <SvgXml
               xml={`<svg fill="#FFCB0A" width="30px" height="30px" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <g id="Layer_2" data-name="Layer 2"> <g id="Layer_1-2" data-name="Layer 1"> <path d="M8,8A4,4,0,1,0,4,4,4,4,0,0,0,8,8ZM8,1A3,3,0,1,1,5,4,3,3,0,0,1,8,1Zm4,7a4,4,0,1,0,4,4A4,4,0,0,0,12,8Zm0,7a3,3,0,1,1,2.27-4.94.54.54,0,0,0-.12.09L11.5,12.79l-.65-.64a.49.49,0,0,0-.7.7l1,1a.48.48,0,0,0,.7,0l2.94-2.93A3,3,0,0,1,15,12,3,3,0,0,1,12,15Zm-4,.5a.5.5,0,0,1-.5.5h-6A1.5,1.5,0,0,1,0,14.5,4.51,4.51,0,0,1,4.5,10h2a.5.5,0,0,1,0,1h-2A3.5,3.5,0,0,0,1,14.5a.5.5,0,0,0,.5.5h6A.5.5,0,0,1,8,15.5Z"></path> </g> </g> </g></svg>`} />
-            <SvgXml
-              xml={
-                data.kyc == true ? (
-                  `<svg fill="#009743" width="30px" height="30px" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" stroke="#009743"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g> <path d="M58.3945,32.1563,42.9961,50.625l-5.3906-6.4629a5.995,5.995,0,1,0-9.211,7.6758l9.9961,12a5.9914,5.9914,0,0,0,9.211.0059l20.0039-24a5.9988,5.9988,0,1,0-9.211-7.6875Z"></path> <path d="M48,0A48,48,0,1,0,96,48,48.0512,48.0512,0,0,0,48,0Zm0,84A36,36,0,1,1,84,48,36.0393,36.0393,0,0,1,48,84Z"></path> </g> </g></svg>`
-                ) : (
-                `<svg width="30px" height="30px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#ff0000"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M16 8L8 16M8.00001 8L16 16M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="#ff0000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>` 
-                )
-              }
-              style={{marginLeft:10}}
-            />
+            {data.kyc === 'true' ?
+              <SvgXml
+                xml={
+                    `<svg fill="#009743" width="30px" height="30px" viewBox="0 0 96 96" xmlns="http://www.w3.org/2000/svg" stroke="#009743"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title></title> <g> <path d="M58.3945,32.1563,42.9961,50.625l-5.3906-6.4629a5.995,5.995,0,1,0-9.211,7.6758l9.9961,12a5.9914,5.9914,0,0,0,9.211.0059l20.0039-24a5.9988,5.9988,0,1,0-9.211-7.6875Z"></path> <path d="M48,0A48,48,0,1,0,96,48,48.0512,48.0512,0,0,0,48,0Zm0,84A36,36,0,1,1,84,48,36.0393,36.0393,0,0,1,48,84Z"></path> </g> </g></svg>`
+                }
+                style={{ marginLeft: 10 }}
+              />
+              : null}
 
 
           </View>

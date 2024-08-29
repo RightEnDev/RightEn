@@ -76,7 +76,7 @@ const LoginScreen = ({ navigation }) => {
         showSuccessToast();
         setTimeout(() => {
           navigation.navigate('Home');
-        }, 2000); // 2000 milliseconds = 2 seconds
+        }, 1500); // 2000 milliseconds = 2 seconds
 
         // Alert.alert('Login Successful', 'You are now logged in.');
 

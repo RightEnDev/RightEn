@@ -20,11 +20,7 @@ const History = ({ navigation }) => {
   const [showEndPicker, setShowEndPicker] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [value, setValue] = useState(null);
-  const [items, setItems] = useState([
-    { label: ' 1', value: 'option1' },
-    { label: ' 2', value: 'option2' },
-    { label: 'Option 3', value: 'option3' },
-  ]);
+  const [items, setItems] = useState([]);
 
   // const [research, serSearch] = useState();
 
@@ -70,9 +66,47 @@ const History = ({ navigation }) => {
       setLoading(false);
     }
   };
+
+  const fetchOptionData = async () => {
+    try {
+      setLoading(true);
+
+      try {
+        const response = await axios.get(`https://righten.in/api/users/services/level`);
+        // console.log(response.data);
+        if (!response.data.status === "success") {
+          throw new Error('Network response was not ok');
+        }
+        const updatedData = response.data.data.map(item => {
+          return {
+            ...item,
+            label: item.level,
+          };
+        });
+        const newElement = {
+          value: "",
+          label: "All servicce",
+          status: "1"
+        };
+        updatedData.unshift(newElement);
+
+        setItems(updatedData);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+      // console.log(data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     // console.log("trying");
     fetchData();
+    fetchOptionData();
   }, [isFocused, startDate, endDate, value]);
 
   const handleStartDateChange = (event, selectedDate) => {
@@ -279,9 +313,11 @@ const History = ({ navigation }) => {
 
       <ScrollView horizontal showsHorizontalScrollIndicator={true}>
 
-        <View style={{ flexDirection: 'column',
-        paddingBottom:10,
-        marginTop: 30, width: 1500 }}>
+        <View style={{
+          flexDirection: 'column',
+          paddingBottom: 10,
+          marginTop: 30, width: 1500
+        }}>
           <HeaderItem />
           <FlatList
             data={data}
