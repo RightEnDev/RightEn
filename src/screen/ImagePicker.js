@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import {
   Button,
   PermissionsAndroid,
@@ -27,23 +27,24 @@ const screenWidth = Dimensions.get('window').width;
 import axios from 'axios';
 // console.log(screenWidth);
 const ImagePicker = ({ route, navigation }) => {
-  const { txn_id,pan_form_id } = route.params;
+  const { txn_id, pan_form_id } = route.params;
+  console.log(txn_id);
   // console.log(txn_id);
   const [loading, setLoading] = useState(false);
   const [photoUris, setPhotoUris] = useState([]);
 
   useFocusEffect(
     React.useCallback(() => {
-        const onBackPress = () => {
-            navigation.navigate('main');
-            return true;
-        };
+      const onBackPress = () => {
+        navigation.navigate('main');
+        return true;
+      };
 
-        BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
 
-        return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [navigation])
-);
+  );
 
   const requestCameraPermission = async () => {
     try {
@@ -92,9 +93,11 @@ const ImagePicker = ({ route, navigation }) => {
     if (option === 'camera') {
       const hasPermission = await requestCameraPermission();
       if (hasPermission) {
-        launchCamera({ mediaType: 'photo', maxWidth: 500,
-        maxHeight: 500,
-        quality: 0.5,includeBase64: true }, async (response) => {
+        launchCamera({
+          mediaType: 'photo', maxWidth: 500,
+          maxHeight: 500,
+          quality: 0.5, includeBase64: true
+        }, async (response) => {
           if (response.didCancel) {
             Alert.alert('User cancelled photo picker');
           } else if (response.errorCode) {
@@ -170,85 +173,77 @@ const ImagePicker = ({ route, navigation }) => {
   const uploadPhotos = async () => {
     setLoading(true); // Start loading indicator
 
-    const attemptUpload = async (retry = 2, delay = 3000) => {
-      try {
-        const us_id = await AsyncStorage.getItem('us_id');
+    const attemptUpload = async () => { // Removed retry parameter
+        try {
+            const us_id = await AsyncStorage.getItem('us_id');
 
-        const formData = new FormData();
-        formData.append('user_id', us_id);
-        formData.append('pan_form_id', pan_form_id);
+            const formData = new FormData();
+            formData.append('user_id', us_id);
+            formData.append('pan_form_id', pan_form_id);
 
-        for (let i = 0; i < photoUris.length; i++) {
-          const uri = photoUris[i];
-          if (uri) {
-            const fileExtension = uri.split('.').pop().toLowerCase();
-            if (fileExtension !== 'jpeg' && fileExtension !== 'jpg') {
-              showErrorToast('Unsupported File Type', 'Only JPG and JPEG images are supported.')
+            for (let i = 0; i < photoUris.length; i++) {
+                const uri = photoUris[i];
+                if (uri) {
+                    const fileExtension = uri.split('.').pop().toLowerCase();
+                    if (fileExtension !== 'jpeg' && fileExtension !== 'jpg') {
+                        showErrorToast('Unsupported File Type', 'Only JPG and JPEG images are supported.');
+                        setLoading(false); // Stop loading indicator
+                        return;
+                    }
 
-              // Alert.alert('Unsupported File Type', 'Only JPG and JPEG images are supported.');
-              setLoading(false); // Stop loading indicator
-              return;
+                    const mimeType = 'image/jpeg';
+                    formData.append('files[]', {
+                        uri: uri.startsWith('file://') ? uri : `file://${uri}`,
+                        type: mimeType,
+                        name: `photo_${i}.${fileExtension}`,
+                    });
+                }
             }
 
-            const mimeType = 'image/jpeg';
-
-            formData.append('files[]', {
-              uri: uri.startsWith('file://') ? uri : `file://${uri}`,
-              type: mimeType,
-              name: `photo_${i}.${fileExtension}`,
+            const response = await axios.post('https://righten.in/api/services/pancard/upload', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                timeout: 60000 *2 , // Increased timeout to 60 seconds
             });
-          }
-        }
 
-        const response = await axios.post('https://righten.in/api/services/pancard/upload', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-          timeout: 15000,
-        });
+            if (response.status === 200) {
+                console.log('Photos uploaded successfully');
+                console.log(response.data);
+                showSuccessToast();
 
-        if (response.status === 200) {
-          console.log('Photos uploaded successfully');
-          console.log(response.data);
-          showSuccessToast();
-        } else {
-          console.error('Failed to upload photos', response.status, response.statusText);
-          showErrorToast('Failed to upload photos. Please try again later.')
-          // Alert.alert('Upload Error', 'Failed to upload photos. Please try again later.');
+                // Navigate to 'Payment' screen after 1 second
+                setTimeout(() => {
+                    navigation.navigate('Paymennt', { "txn_id": txn_id });
+                }, 1000);
+
+            } else {
+                console.error('Failed to upload photos', response.status, response.statusText);
+                showErrorToast('Failed to upload photos. Please try again later.');
+            }
+        } catch (error) {
+            handleError(error);
+        } finally {
+            setLoading(false); // Stop loading indicator regardless of success or failure
         }
-      } catch (error) {
-        if (retry > 0) {
-          console.log('Retrying upload...');
-          setTimeout(() => attemptUpload(retry - 1, delay), delay);
-        } else {
-          handleError(error);
-        }
-      } finally {
-        setLoading(false); // Stop loading indicator regardless of success or failure
-      }
     };
 
     const handleError = (error) => {
-      if (error.response) {
-        console.error('Server Error:', error.response.status, error.response.data);
-        showErrorToast('server error.')
-
-        // Alert.alert('Upload Error', `Server error: ${error.response.status}`);
-      } else if (error.request) {
-        console.error('No Response Received:', error.request);
-        showErrorToast('network error.')
-
-        // Alert.alert('Network Error', 'No response from server. Please check your network connection.');
-      } else {
-        console.error('Error uploading photos:', error.message);
-        showErrorToast('Upload Error', 'An unexpected error occurred.')
-
-        // Alert.alert('Upload Error', 'An unexpected error occurred while uploading photos.');
-      }
+        if (error.response) {
+            console.error('Server Error:', error.response.status, error.response.data);
+            showErrorToast('Server error.');
+        } else if (error.request) {
+            console.error('No Response Received:', error.request);
+            showErrorToast('Network error.');
+        } else {
+            console.error('Error uploading photos:', error.message);
+            showErrorToast('Upload Error', 'An unexpected error occurred.');
+        }
     };
 
-    await attemptUpload(5); // Attempt upload with a retry mechanism
-  };
+    await attemptUpload(); // Call attemptUpload without retry logic
+};
+
 
 
 
@@ -264,7 +259,8 @@ const ImagePicker = ({ route, navigation }) => {
       ) : null}
       <Toast />
       <View style={styles.buttonContainer}>
-        <TouchableOpacity
+
+        {/* <TouchableOpacity
           style={styles.button}
           onPress={() => handleChooseImage('gallery')}
         >
@@ -280,7 +276,7 @@ const ImagePicker = ({ route, navigation }) => {
             />
             <Text style={styles.buttonText}>Gallery</Text>
           </View>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
 
         <TouchableOpacity
           style={styles.button}

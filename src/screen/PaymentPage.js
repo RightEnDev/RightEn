@@ -1,40 +1,189 @@
+import { StatusBar, Image, BackHandler, ActivityIndicator, SafeAreaView, StyleSheet, Text, TouchableOpacity, Linking, View, Alert } from 'react-native'
+import React, { useState, useEffect } from 'react';
+import logo from '../../assets/images/vertical_righten_without_logo.png'
+import { useFocusEffect } from '@react-navigation/native';
+import axios from 'axios';
+import qs from 'qs';
+import Toast from 'react-native-toast-message';
 
+const PaymentPage = ({ route, navigation }) => {
+  const { txn_id } = route.params;
+  console.log("from payment page");
+  console.log(txn_id,"----------------------------------------------------------------------------------");
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-import { StatusBar,Image, SafeAreaView,StyleSheet, Text, TouchableOpacity,Linking, View,Alert } from 'react-native'
-import React from 'react';
-import logo from './assets/images/vertical_righten_without_logo.png'
+  useFocusEffect(
+    React.useCallback(() => {
+      const onBackPress = () => {
+        navigation.navigate('main');
+        return true;
+      };
+      BackHandler.addEventListener('hardwareBackPress', onBackPress);
+      return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+    }, [navigation])
+  );
+  const fetchData = async () => {
+    try {
+      setLoading(true);
 
-const App = () => {
-  const handlePress = async () => {
-    const url =`upi://pay?pa=MANSURRAHAMAN.39716622@HDFCBANK&pn=MANSUR%20RAHAMAN&am=107&tn=15121361724828289090&tr=15121361724828289090`;
-    await Linking.openURL(url);
+      setData([]);
+      const response = await axios.post('https://righten.in/api/services/pancard/payment_pg_phonepe',
+        qs.stringify({
+          pan_txn_id: txn_id,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+      console.log(response.data);
+      if (!response.data.status === "success") {
+        throw new Error('Network response was not ok');
+      }
+      setData(response.data);
+    } catch (error) {
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  const showErrorToast = () => {
+    Toast.show({
+      type: 'error',
+      text1: 'Oops! 😔',
+      text2: 'Something went wrong. Please try again.',
+      // position: 'top', // or 'bottom'
+    });
+  };
+
+
+  useEffect(() => {
+    const fetchDataAndUpdateState = async () => {
+      try {
+        setData([]); // Reset state
+        console.log("rests ");
+
+        const response = await axios.post(
+          'https://righten.in/api/services/pancard/payment_status_phonepe',
+          qs.stringify({
+            pan_txn_id: txn_id,
+          }),
+          {
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded',
+            },
+          }
+        );
+        console.log("----------------------------------");
+        console.log(response.data );
+        console.log("----------------------------------"); 
+
+        console.log(response.data.status, "paymnt check");
+
+        if (response.data.status !== true) {
+          fetchData();
+        }
+      } catch (error) {
+        showErrorToast();
+      }
+    };
+
+    fetchDataAndUpdateState();
+  }, [navigation]);
+
+  const handlePress = async (url) => {
+    try {
+      setData([]); // Reset state
+
+      const response = await axios.post(
+        'https://righten.in/api/services/pancard/payment_status_phonepe',
+        qs.stringify({
+          pan_txn_id: txn_id,
+        }),
+        {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+        }
+      );
+      console.log(response.data.status, "paymnt check re check");
+
+      // if (response.data.status !== true) {
+      //   navigation.navigate('Home');
+      //   await Linking.openURL(url);
+      // }
+      // else{
+      //   navigation.navigate('main');
+      // }
+    } catch (error) {
+      console.log(error);
+      showErrorToast();
+    }
+    // const url = '';
+  };
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.container}
+      >
+        <Text>Error: {error}</Text>
+      </View>
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
-    <View style={styles.content}>
-      <Text style={styles.username}>Pay To:  RightEN.in</Text>
-      <Image
-      source={logo} 
-      style={{
-        width:300,
-        height:undefined,
-        aspectRatio:5,
-      }}
+      <View style={styles.content}>
+        <View
+          style={{
+            position: 'relative',
+            zIndex: 10, // Ensure the toast is on top
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+          }}
+        >
+          <Toast />
+        </View>
+        <Text style={styles.username}>Pay To:  RightEN.in</Text>
+        <Image
+          source={logo}
+          style={{
+            width: 300,
+            height: undefined,
+            aspectRatio: 5,
+          }}
 
-      />
-      <Text style={[styles.username,{marginTop:50}]}>Payee Name:  Ankan Ghosh</Text>
-      <Text style={styles.amount}>Amount: ₹ 150.00</Text>
-      <TouchableOpacity style={styles.button} onPress={() => {
-        console.log("predd");
-      }}>
-        <Text style={styles.buttonText}>Pay Now</Text>
-      </TouchableOpacity>
-    </View>
-  </SafeAreaView>
+        />
+        <Text style={[styles.username, { marginTop: 50 }]}>Payer Name:
+          {data.payer_name}
+        </Text>
+        <Text style={styles.amount}>Amount: ₹
+          {data.pay_amount}
+        </Text>
+        <TouchableOpacity style={styles.button} onPress={() => {
+          // console.log("predd");
+          handlePress(data.pay_url)
+        }}>
+          <Text style={styles.buttonText}>Pay Now</Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   )
 }
 
-export default App
+export default PaymentPage;
 
 const styles = StyleSheet.create({
   container: {
