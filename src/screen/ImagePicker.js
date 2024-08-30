@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Button,
   PermissionsAndroid,
@@ -174,75 +174,76 @@ const ImagePicker = ({ route, navigation }) => {
     setLoading(true); // Start loading indicator
 
     const attemptUpload = async () => { // Removed retry parameter
-        try {
-            const us_id = await AsyncStorage.getItem('us_id');
+      try {
+        const us_id = await AsyncStorage.getItem('us_id');
 
-            const formData = new FormData();
-            formData.append('user_id', us_id);
-            formData.append('pan_form_id', pan_form_id);
+        const formData = new FormData();
+        formData.append('user_id', us_id);
+        formData.append('pan_form_id', pan_form_id);
 
-            for (let i = 0; i < photoUris.length; i++) {
-                const uri = photoUris[i];
-                if (uri) {
-                    const fileExtension = uri.split('.').pop().toLowerCase();
-                    if (fileExtension !== 'jpeg' && fileExtension !== 'jpg') {
-                        showErrorToast('Unsupported File Type', 'Only JPG and JPEG images are supported.');
-                        setLoading(false); // Stop loading indicator
-                        return;
-                    }
-
-                    const mimeType = 'image/jpeg';
-                    formData.append('files[]', {
-                        uri: uri.startsWith('file://') ? uri : `file://${uri}`,
-                        type: mimeType,
-                        name: `photo_${i}.${fileExtension}`,
-                    });
-                }
+        for (let i = 0; i < photoUris.length; i++) {
+          const uri = photoUris[i];
+          if (uri) {
+            const fileExtension = uri.split('.').pop().toLowerCase();
+            if (fileExtension !== 'jpeg' && fileExtension !== 'jpg') {
+              showErrorToast('Unsupported File Type', 'Only JPG and JPEG images are supported.');
+              setLoading(false); // Stop loading indicator
+              return;
             }
 
-            const response = await axios.post('https://righten.in/api/services/pancard/upload', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-                timeout: 60000 *2 , // Increased timeout to 60 seconds
+            const mimeType = 'image/jpeg';
+            formData.append('files[]', {
+              uri: uri.startsWith('file://') ? uri : `file://${uri}`,
+              type: mimeType,
+              name: `photo_${i}.${fileExtension}`,
             });
-
-            if (response.status === 200) {
-                console.log('Photos uploaded successfully');
-                console.log(response.data);
-                showSuccessToast();
-
-                // Navigate to 'Payment' screen after 1 second
-                setTimeout(() => {
-                    navigation.navigate('Paymennt', { "txn_id": txn_id });
-                }, 1000);
-
-            } else {
-                console.error('Failed to upload photos', response.status, response.statusText);
-                showErrorToast('Failed to upload photos. Please try again later.');
-            }
-        } catch (error) {
-            handleError(error);
-        } finally {
-            setLoading(false); // Stop loading indicator regardless of success or failure
+          }
         }
+
+        const response = await axios.post('https://righten.in/api/services/pancard/upload', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+          timeout: 60000 * 2, // Increased timeout to 60 seconds
+        });
+
+        if (response.status === 200) {
+          console.log('Photos uploaded successfully');
+          console.log(response.data);
+          showSuccessToast();
+
+          // Navigate to 'Payment' screen after 1 second
+          setTimeout(() => {
+            setPhotoUris([]);
+            navigation.navigate('Paymennt', { "txn_id": txn_id });
+          }, 1000);
+
+        } else {
+          console.error('Failed to upload photos', response.status, response.statusText);
+          showErrorToast('Failed to upload photos. Please try again later.');
+        }
+      } catch (error) {
+        handleError(error);
+      } finally {
+        setLoading(false); // Stop loading indicator regardless of success or failure
+      }
     };
 
     const handleError = (error) => {
-        if (error.response) {
-            console.error('Server Error:', error.response.status, error.response.data);
-            showErrorToast('Server error.');
-        } else if (error.request) {
-            console.error('No Response Received:', error.request);
-            showErrorToast('Network error.');
-        } else {
-            console.error('Error uploading photos:', error.message);
-            showErrorToast('Upload Error', 'An unexpected error occurred.');
-        }
+      if (error.response) {
+        console.error('Server Error:', error.response.status, error.response.data);
+        showErrorToast('Server error.');
+      } else if (error.request) {
+        console.error('No Response Received:', error.request);
+        showErrorToast('Network error.');
+      } else {
+        console.error('Error uploading photos:', error.message);
+        showErrorToast('Upload Error', 'An unexpected error occurred.');
+      }
     };
 
     await attemptUpload(); // Call attemptUpload without retry logic
-};
+  };
 
 
 

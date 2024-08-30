@@ -8,10 +8,10 @@ import Toast from 'react-native-toast-message';
 
 const PaymentPage = ({ route, navigation }) => {
   const { txn_id } = route.params;
-  console.log("from payment page");
-  console.log(txn_id,"----------------------------------------------------------------------------------");
+  // console.log("from payment page");
+  // console.log(txn_id, "----------------------------------------------------------------------------------");
   const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true); 
   const [error, setError] = useState(null);
 
   useFocusEffect(
@@ -39,10 +39,12 @@ const PaymentPage = ({ route, navigation }) => {
           },
         }
       );
-      console.log(response.data);
-      if (!response.data.status === "success") {
-        throw new Error('Network response was not ok');
+      // console.log(txn_id);
+      // console.log( response.data.status !== "success");
+      if ( response.data.status !== "success") {
+        throw new Error('Network response was not ok');  
       }
+
       setData(response.data);
     } catch (error) {
       setError(error.message);
@@ -65,7 +67,7 @@ const PaymentPage = ({ route, navigation }) => {
     const fetchDataAndUpdateState = async () => {
       try {
         setData([]); // Reset state
-        console.log("rests ");
+        // console.log("rests ");
 
         const response = await axios.post(
           'https://righten.in/api/services/pancard/payment_status_phonepe',
@@ -78,13 +80,14 @@ const PaymentPage = ({ route, navigation }) => {
             },
           }
         );
-        console.log("----------------------------------");
-        console.log(response.data );
-        console.log("----------------------------------"); 
+        // console.log("----------------------------------");
+        // console.log(response.data);
+        // console.log("----------------------------------");
 
-        console.log(response.data.status, "paymnt check");
-
-        if (response.data.status !== true) {
+        // console.log(response.data, "paymnt check"); 
+        // console.log(txn_id);
+        // console.log( response.data.status !== true);
+        if ( response.data.status !== true) {
           fetchData();
         }
       } catch (error) {
@@ -97,30 +100,10 @@ const PaymentPage = ({ route, navigation }) => {
 
   const handlePress = async (url) => {
     try {
-      setData([]); // Reset state
-
-      const response = await axios.post(
-        'https://righten.in/api/services/pancard/payment_status_phonepe',
-        qs.stringify({
-          pan_txn_id: txn_id,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      );
-      console.log(response.data.status, "paymnt check re check");
-
-      // if (response.data.status !== true) {
-      //   navigation.navigate('Home');
-      //   await Linking.openURL(url);
-      // }
-      // else{
-      //   navigation.navigate('main');
-      // }
+      // setData([]);
+      await Linking.openURL(url);
     } catch (error) {
-      console.log(error);
+      // console.log(error);
       showErrorToast();
     }
     // const url = '';

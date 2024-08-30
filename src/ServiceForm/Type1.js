@@ -111,11 +111,21 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
                 if (response.data.status === 'success') {
                     setformResponse(response.data.data);
                     showSuccessToast(response.data.data.txn_id);
+                    setPanType('');
+                    setName('');
+                    setDD('');
+                    setMM('');
+                    setYYYY('');
+                    setDob('');
+                    setShowPicker(false);
+                    setSelectedDate(new Date());
+                    setFatherName('');
+                    setMobileNo('');
 
-                    navigation.navigate('ImagePicker',{ 
-                        "pan_form_id":response.data.pan_form_id,
-                        "txn_id": response.data.data.txn_id,  
-                      });
+                    navigation.navigate('ImagePicker', {
+                        "pan_form_id": response.data.pan_form_id,
+                        "txn_id": response.data.data.txn_id,
+                    });
 
 
                 } else {
@@ -145,7 +155,7 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
 
                         <SvgXml xml={serviceSVG} />
                     </View>
-                    <Text style={[styles.input, { fontSize: 24, fontWeight: 'bold', fontFamily: 'BAUHS93',height:'auto' }]}>{label}</Text>
+                    <Text style={[styles.input, { fontSize: 24, fontWeight: 'bold', fontFamily: 'BAUHS93', height: 'auto' }]}>{label}</Text>
 
                 </View>
                 <Toast />

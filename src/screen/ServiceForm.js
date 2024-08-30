@@ -1,10 +1,10 @@
-import { StyleSheet, Text,Image, View, TextInput, TouchableOpacity, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
+import { StyleSheet, Text, Image, View, TextInput, TouchableOpacity, BackHandler, Dimensions, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import React, { useState, useCallback, useEffect } from 'react';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import qs from 'qs';
-const { width,height } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 import { SvgXml } from 'react-native-svg';
 import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG } from '../../assets/ALLSVG';
 import Type1 from '../ServiceForm/Type1';
@@ -31,32 +31,33 @@ const ServiceForm = ({ route, navigation }) => {
         }, [navigation])
     );
     return (
-        service_data.form_service_code === "REPAN" ? (
-            <Type1 
+        service_data.form_service_code === "REPAN" && service_data.form_sub_service_id === '3' ? (
+            <Type1
                 label={`${service_data.name} @ ${service_data.offer_price}`}
                 form_service_code={service_data.form_service_code}
                 form_service_id={service_data.form_service_id}
                 form_sub_service_id={service_data.form_sub_service_id}
                 navigation={navigation}
                 formSubmitUrl="https://righten.in/api/services/pancard/save"
-                cardtype="Pan" 
+                cardtype="Pan"
             />
-        ) : 
-        <>
-          <View style={{
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#fff'
-          }}>
-            <Text style={{fontSize:24,fontWeight:'bold',color:'black',textAlign:'center'
-            }}>
-                This service currently not available
-            </Text>
-          </View>
-        </>
+        ) :
+            <>
+                <View style={{
+                    flex: 1,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#fff'
+                }}>
+                    <Text style={{
+                        fontSize: 24, fontWeight: 'bold', color: 'black', textAlign: 'center'
+                    }}>
+                        This service currently not available
+                    </Text>
+                </View>
+            </>
     );
-    
+
 
 };
 
