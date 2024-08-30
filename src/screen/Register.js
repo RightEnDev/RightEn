@@ -138,7 +138,7 @@ const Register = ({ navigation }) => {
     Toast.show({
       type: 'success',
       text1: 'Hello 👋',
-      text2: `Registration succcessfull , your password is ${password}, user id is ${password,user_id}`,
+      text2: `Registration succcessfull , your password is ${password}`,
 
     });
   };
