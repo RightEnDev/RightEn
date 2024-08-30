@@ -87,7 +87,7 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
                 mobileNo
             ) {
 
-                console.log('Submitted Data:', { user_id, panType, name, dateOfBirth, fatherName, mobileNo });
+                // console.log('Submitted Data:', { user_id, panType, name, dateOfBirth, fatherName, mobileNo });
 
                 const response = await axios.post(formSubmitUrl,
                     qs.stringify({
@@ -131,7 +131,7 @@ const Type1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_s
                 } else {
                     showErrorToast();
                 }
-                console.log(response.data.status === 'success');
+                // console.log(response.data.status === 'success');
             } else {
                 Alert.alert("Enter all field");
 

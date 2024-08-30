@@ -28,7 +28,7 @@ import axios from 'axios';
 // console.log(screenWidth);
 const ImagePicker = ({ route, navigation }) => {
   const { txn_id, pan_form_id } = route.params;
-  console.log(txn_id);
+  // console.log(txn_id);
   // console.log(txn_id);
   const [loading, setLoading] = useState(false);
   const [photoUris, setPhotoUris] = useState([]);
@@ -104,7 +104,7 @@ const ImagePicker = ({ route, navigation }) => {
             Alert.alert('ImagePicker Error: ', response.errorMessage);
           } else {
             const imageSize = response.assets[0].fileSize; // Get the original image size in bytes
-            console.log(`Original Image Size: ${(imageSize / (1024 * 1024)).toFixed(2)} MB`); // Log original size in MB
+            // console.log(`Original Image Size: ${(imageSize / (1024 * 1024)).toFixed(2)} MB`); // Log original size in MB
 
             if (imageSize > 2 * 1024 * 1024) { // 2 MB in bytes
               try {
@@ -134,7 +134,7 @@ const ImagePicker = ({ route, navigation }) => {
           Alert.alert('ImagePicker Error: ', response.errorMessage);
         } else {
           const imageSize = response.assets[0].fileSize; // Get the original image size in bytes
-          console.log(`Original Image Size: ${(imageSize / (1024 * 1024)).toFixed(2)} MB`); // Log original size in MB
+          // console.log(`Original Image Size: ${(imageSize / (1024 * 1024)).toFixed(2)} MB`); // Log original size in MB
 
           if (imageSize > 2 * 1024 * 1024) { // 2 MB in bytes
             try {
@@ -208,8 +208,8 @@ const ImagePicker = ({ route, navigation }) => {
         });
 
         if (response.status === 200) {
-          console.log('Photos uploaded successfully');
-          console.log(response.data);
+          // console.log('Photos uploaded successfully');
+          // console.log(response.data);
           showSuccessToast();
 
           // Navigate to 'Payment' screen after 1 second
