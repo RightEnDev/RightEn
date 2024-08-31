@@ -8,6 +8,7 @@ const { width, height } = Dimensions.get('window');
 import { SvgXml } from 'react-native-svg';
 import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG } from '../../assets/ALLSVG';
 import Type1 from '../ServiceForm/Type1';
+import Type1_1 from '../ServiceForm/Type1_1';
 
 // import { useIsFocused } from '@react-navigation/native';
 
@@ -30,8 +31,12 @@ const ServiceForm = ({ route, navigation }) => {
             return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
         }, [navigation])
     );
-    return (
-        service_data.form_service_code === "REPAN" && service_data.form_sub_service_id === '3' ? (
+    if (service_data.form_service_code === "REPAN" && (service_data.form_sub_service_id === '3' ||
+        service_data.form_sub_service_id === '5' ||
+        service_data.form_sub_service_id === '27' ||
+        service_data.form_sub_service_id === '28'
+    )) {
+        return (
             <Type1
                 label={`${service_data.name} @ ${service_data.offer_price}`}
                 form_service_code={service_data.form_service_code}
@@ -41,6 +46,35 @@ const ServiceForm = ({ route, navigation }) => {
                 formSubmitUrl="https://righten.in/api/services/pancard/save"
                 cardtype="Pan"
             />
+        )
+    }
+    if (service_data.form_service_code === "REPAN" && service_data.form_sub_service_id === '4' ) {
+        return (
+            <Type1_1
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/pancard/save"
+                cardtype="Pan"
+            />
+        )
+    }
+
+
+    return (
+        service_data.form_service_code === "REPAN" && service_data.form_sub_service_id === '3' ? (
+            null
+            // <Type1
+            //     label={`${service_data.name} @ ${service_data.offer_price}`}
+            //     form_service_code={service_data.form_service_code}
+            //     form_service_id={service_data.form_service_id}
+            //     form_sub_service_id={service_data.form_sub_service_id}
+            //     navigation={navigation}
+            //     formSubmitUrl="https://righten.in/api/services/pancard/save"
+            //     cardtype="Pan"
+            // />
         ) :
             <>
                 <View style={{

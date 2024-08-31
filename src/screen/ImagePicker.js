@@ -94,9 +94,10 @@ const ImagePicker = ({ route, navigation }) => {
       const hasPermission = await requestCameraPermission();
       if (hasPermission) {
         launchCamera({
-          mediaType: 'photo', maxWidth: 500,
-          maxHeight: 500,
-          quality: 0.5, includeBase64: true
+          mediaType: 'photo', 
+          maxWidth: 1280,
+          maxHeight: 720,
+          quality: 0.8, includeBase64: true
         }, async (response) => {
           if (response.didCancel) {
             Alert.alert('User cancelled photo picker');
