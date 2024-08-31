@@ -4,12 +4,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import StackNavigator from './StackNavigator';
 // import TabNavigator from './TabNavigator';
 import TabNavigator from './TabNavigator';
+import linking from '../linking';
 
 
 const AppNav = () => {
   return (
     // <SafeAreaView>
-      <NavigationContainer>
+      <NavigationContainer  linking={linking}>
         <StackNavigator />
       </NavigationContainer>
     // </SafeAreaView>
