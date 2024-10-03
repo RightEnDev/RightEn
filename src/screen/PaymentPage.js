@@ -5,6 +5,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import qs from 'qs';
 import Toast from 'react-native-toast-message';
+import PhonePePaymentSDK from 'react-native-phonepe-pg' 
 
 const PaymentPage = ({ route, navigation }) => {
   const { txn_id } = route.params;

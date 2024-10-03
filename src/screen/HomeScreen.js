@@ -1,57 +1,3 @@
-// import { StyleSheet, Text, View, Button } from 'react-native';
-// import React from 'react';
-
-// const HomeScreen = ({ navigation }) => {
-//   return (
-//     <View style={styles.container}>
-//       {/* <Button
-//         title="Go to drawer"
-//         onPress={() => navigation.toogleDrawer()}
-//       /> */}
-//       <Text style={styles.title}>HomeScreen</Text>
-//       <Button
-//         title="Go to Example 1"
-//         onPress={() => navigation.navigate('Example1')}
-//       />
-//       <Button
-//         title="Go to Example 2"
-//         onPress={() => navigation.navigate('Example2')}
-//       />
-//       <Button
-//         title="Go to Example 3"
-//         onPress={() => navigation.navigate('Example3')}
-//       />
-//       <Button
-//         title="Go to Details"
-//         onPress={() => navigation.navigate('Details', { itemId: 424 })}
-//       />
-//       <Button
-//         title="Go to Details"
-//         onPress={() => navigation.navigate('Details', { itemId: 43 })}
-//       />
-//     </View>
-//   );
-// };
-
-// export default HomeScreen;
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     justifyContent: 'center',
-//     alignItems: 'center',
-//     backgroundColor: 'red'
-//   },
-//   title: {
-//     fontSize: 24,
-//     marginBottom: 20,
-//   },
-// });
-
-
-
-
-
 import { StyleSheet, Text, View,BackHandler, Alert, StatusBar, ActivityIndicator, FlatList, Dimensions, Image } from 'react-native'
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -139,7 +85,7 @@ const HomeScreen = ({ navigation }) => {
               "service_code": item.service_code, 
               "app_icon": item.app_icon, 
             });
-            
+
 
           }}
         >
@@ -213,4 +159,5 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 })
+
 
