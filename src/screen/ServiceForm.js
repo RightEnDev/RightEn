@@ -13,6 +13,7 @@ import Type2 from '../ServiceForm/Type2';
 import Type3 from '../ServiceForm/Type3';
 import Type4 from '../ServiceForm/Type4';
 import Type5 from '../ServiceForm/Type5';
+import Type6 from '../ServiceForm/Type6';
 
 // import { useIsFocused } from '@react-navigation/native';
 
@@ -131,11 +132,96 @@ const ServiceForm = ({ route, navigation }) => {
                 form_sub_service_id={service_data.form_sub_service_id}
                 navigation={navigation}
                 formSubmitUrl="https://righten.in/api/services/fssai/save"
-                cardtype="GST"
+                cardtype="FSSAI"
                 
             />
         )
     }
+
+    if (service_data.form_service_code === "RETL" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/tl/upload"
+        return (
+            <Type3
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/tl/save"
+                cardtype="Trade License"
+                
+            />
+        )
+    }
+
+    if (service_data.form_service_code === "REMSME" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/MSME/upload"
+        return (
+            <Type3
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/MSME/save"
+                cardtype="MSME"
+                
+            />
+        )
+    }
+
+    if (service_data.form_service_code === "RETM" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/trademark/upload"
+        return (
+            <Type3
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/trademark/save"
+                cardtype="Trade Mark"
+                
+            />
+        )
+    }
+
+    if (service_data.form_service_code === "REPTAX" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/ptax/upload"
+        return (
+            <Type3
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/ptax/save"
+                cardtype="P-Tax"
+                
+            />
+        )
+    }
+    if (service_data.form_service_code === "REPF" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/pf/upload"
+        return (
+            <Type3
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/pf/save"
+                cardtype="PF"
+                
+            />
+        )
+    }
+    
     if (service_data.form_service_code === "REPANS" ) {
         service_data.fileUploadURl="https://righten.in/api/services/surrander/upload"
         return (
@@ -168,8 +254,24 @@ const ServiceForm = ({ route, navigation }) => {
             />
         )
     }
+    if (service_data.form_service_code === "REAPLINK" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/link/upload"
+        return (
+            <Type6
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/link/save"
+                cardtype="Aadhaar PAN Link"
+                
+            />
+        )
+    }
 
-
+    
     return (
        null
     );

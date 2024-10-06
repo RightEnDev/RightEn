@@ -146,7 +146,7 @@ const DetailsScreen = ({ route ,navigation}) => {
         renderItem={renderItem}
         keyExtractor={(item) => item.id.toString()}
         numColumns={3}
-        ListEmptyComponent={<Text>No data available</Text>}
+        ListEmptyComponent={<Text style={{fontSize:24,color:'red'}}>No data available</Text>}
         showsVerticalScrollIndicator={false}
         columnWrapperStyle={styles.service_row}
       />

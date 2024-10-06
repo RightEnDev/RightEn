@@ -10,7 +10,7 @@ import { SvgXml } from 'react-native-svg';
 import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG, serviceSVG } from '../../assets/ALLSVG';
 import Toast from 'react-native-toast-message';
 
-const Type4 = ({ service_data, label, cardtype, form_service_code, form_sub_service_id, form_service_id, formSubmitUrl, navigation }) => {
+const Type6 = ({ service_data, label, cardtype, form_service_code, form_sub_service_id, form_service_id, formSubmitUrl, navigation }) => {
     // console.log(cardtype);
     // console.log(form_service_code,form_sub_service_id,form_service_id);
     const [formResponse, setformResponse] = useState([]);
@@ -18,7 +18,7 @@ const Type4 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
     const [panType, setPanType] = useState('');
     const [name, setName] = useState('');
     const [panNO, setPanNO] = useState('');
-    const [surrPan, setSurrPan] = useState('');
+    const [aadhaar, setAadhaar] = useState('');
     const [dob, setDob] = useState('');
     const [mobileNo, setMobileNo] = useState('');
 
@@ -71,7 +71,7 @@ const Type4 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
             form_sub_service_id &&
             name &&
             panNO && panNO.length === 10 &&
-            surrPan && surrPan.length === 10 &&
+            aadhaar && aadhaar.length === 12 &&
             mobileNo && mobileNo.length === 10
         ) {
 
@@ -85,7 +85,7 @@ const Type4 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
                     sub_service_id: form_sub_service_id,
                     name: name.toUpperCase(),
                     mobile: mobileNo,
-                    surrander_pan:surrPan,
+                    aadhaar_no:aadhaar,
                     pan_no:panNO
 
                 }),
@@ -100,7 +100,7 @@ const Type4 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
                 setformResponse(response.data.data);
                 showSuccessToast(response.data.data.txn_id);
                 setPanNO('');
-                setSurrPan('');
+                setAadhaar('');
                 setName('');
                 setMobileNo('');
 
@@ -142,7 +142,7 @@ const Type4 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
 
                 </View>
                 <Toast />
-                <Text style={styles.label}>Surrander PAN No <Text style={{ color: 'red' }}>*</Text></Text>
+                <Text style={styles.label}>Aadhaar No <Text style={{ color: 'red' }}>*</Text></Text>
                 <View style={styles.input_view}>
                     <View style={styles.svg_box}>
 
@@ -150,11 +150,11 @@ const Type4 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
                     </View>
                     <TextInput
                         style={styles.input}
-                        value={surrPan}
-                        onChangeText={setSurrPan}
+                        value={aadhaar}
+                        onChangeText={setAadhaar}
                         placeholder="Enter Surrander PAN No"
                         placeholderTextColor="black"
-                        maxLength={10}
+                        maxLength={12}
 
                     />
                 </View>
@@ -221,8 +221,7 @@ const Type4 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
     );
 }
 
-export default Type4
-
+export default Type6 
 const styles = StyleSheet.create({
     container: {
         flexGrow: 1,

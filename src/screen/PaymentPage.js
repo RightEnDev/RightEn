@@ -125,10 +125,11 @@ const PaymentPage = ({ route, navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      {!showSuccess ?
+    !showSuccess ?
+      <SafeAreaView style={styles.container}>
+
         <View style={styles.content}>
-          
+
 
           <Text style={styles.username}>Pay To:  RightEN.in</Text>
           <Image
@@ -151,60 +152,39 @@ const PaymentPage = ({ route, navigation }) => {
             <Text style={styles.buttonText}>Pay Now</Text>
           </TouchableOpacity>
         </View>
-        :
-        <View >
-          <Image
-                source={require('../../assets/success.gif')}
-                style={{
-                  width: 175,
-                  height: 175,
-                  alignItems: 'center',
-                  alignSelf: 'center',
-                  justifyContent: 'center',
-                  borderRadius: 500
+      </SafeAreaView>
 
-                }}
-              />
-        </View>
-
-
-      }
-      {/* <View style={styles.content}>
-        <View
-          style={{
-            position: 'relative',
-            zIndex: 10, // Ensure the toast is on top
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-          }}
-        >
-          <Toast />
-        </View>
-        
-        <Text style={styles.username}>Pay To:  RightEN.in</Text>
-        <Image
-          source={logo}
-          style={{
-            width: 300,
-            height: undefined,
-            aspectRatio: 5,
-          }}
-
-        />
-
-        <Text style={styles.amount}>Amount: ₹
-          {service_data.offer_price}
-        </Text>
-        <TouchableOpacity style={styles.button} onPress={() => {
-          console.log("predd");
-          handlePress()
+      :
+      <View style={{
+        backgroundColor: '#f0f0f0',
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}>
+        <View style={{
+          backgroundColor: '#ffffff',
+          height: 300,
+          width: 300,
+          justifyContent: 'center',
+          alignItems: 'center',
         }}>
-          <Text style={styles.buttonText}>Pay Now</Text>
-        </TouchableOpacity>
-      </View> */}
-    </SafeAreaView>
+          <Image
+            source={require('../../assets/success.gif')}
+            style={{
+              width: 175,
+              height: 175,
+              alignItems: 'center',
+              alignSelf: 'center',
+              justifyContent: 'center',
+              borderRadius: 500
+
+            }}
+          />
+        </View>
+      </View>
+
+
+
   )
 }
 
