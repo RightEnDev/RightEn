@@ -5,56 +5,32 @@ import { useFocusEffect } from '@react-navigation/native';
 import axios from 'axios';
 import qs from 'qs';
 import Toast from 'react-native-toast-message';
-import PhonePePaymentSDK from 'react-native-phonepe-pg' 
+import PhonePePaymentSDK from 'react-native-phonepe-pg'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+import Base64 from 'react-native-base64'
+import sha256 from 'sha256'
 const PaymentPage = ({ route, navigation }) => {
-  const { txn_id } = route.params;
+  const { txn_id, service_data } = route.params;
   // console.log("from payment page");
+  // console.log(service_data);
+  // console.log(parseFloat(service_data.offer_price) * 100);
   // console.log(txn_id, "----------------------------------------------------------------------------------");
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null); 
+  const [paymentCount, setPaymentCount] = useState(0);
+
 
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
-        navigation.navigate('main'); 
+        setPaymentCount(0);
+        navigation.navigate('main');
         return true;
       };
       BackHandler.addEventListener('hardwareBackPress', onBackPress);
       return () => BackHandler.removeEventListener('hardwareBackPress', onBackPress);
     }, [navigation])
   );
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      console.log("fetch data called in function");
-      const response = await axios.post('https://righten.in/api/services/pancard/payment_pg_phonepe',
-        qs.stringify({
-          pan_txn_id: txn_id,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
-        }
-      );
-      console.log("----------------********************------------");
-      console.log(response.data);
-      console.log(response.data.payment_status !== "success");
-      // console.log( response.data.status !== "success");
-      if (response.data.payment_status !== "success") {
-        throw new Error('Network response was not ok');
-      }
-      if (response.data.payment_status === "success") {
-        setData(response.data);
-      }
-    } catch (error) {
-      setError(error.message);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const showErrorToast = () => {
     Toast.show({
@@ -66,53 +42,82 @@ const PaymentPage = ({ route, navigation }) => {
   };
 
 
-  useEffect(() => {
-    fetchData(); 
-  }, []);
 
-  const handlePress = async (url) => {
+
+  const handlePress = async () => {
     try {
-      const response = await axios.post(
-        'https://righten.in/api/services/pancard/payment_status_phonepe',
-        qs.stringify({
-          transactionId: txn_id,
-        }),
-        {
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-          },
+
+      const environmentForSDK = 'PRODUCTION';
+      const merchantId = 'M22BD1522HQFO';
+      const salt_key = '7a9c42b8-a73c-45f6-8d4f-13728d0e1966';
+      const appId = null;
+      const enableLogging = true;
+      const amount = parseFloat(service_data.offer_price) * 100;
+      const us_id = await AsyncStorage.getItem('us_id');
+      PhonePePaymentSDK.init(
+        environmentForSDK,
+        merchantId,
+        appId,
+        enableLogging
+      ).then(result => {
+        const payTime = paymentCount + 1;
+        if (payTime > 3) {
+          setPaymentCount(0);
+          navigation.navigate('main');
+          return true;
         }
-      );
-      console.log("onlick222");
-      console.log(response.data.payment_status === true);
-      if (response.data.payment_status === true) {
-        navigation.navigate('main');
-      }
-      else {
-        await Linking.openURL(url);
-      }
+        setPaymentCount(payTime)
+        const merchantTransactionId = txn_id + "R" + payTime;
+        console.log(merchantTransactionId);
+        console.log('merchantTransactionId : ', merchantTransactionId);
+        const requestBody = {
+          "merchantId": merchantId,
+          "merchantTransactionId": merchantTransactionId,
+          "merchantUserId": us_id,
+          "amount": amount,
+          "redirectMode": "POST",
+          "paymentInstrument": {
+            "type": "PAY_PAGE"
+          }
+        }
+        const payload = Base64.encode(JSON.stringify(requestBody));
+        const encodechecksusm = sha256(Base64.encode(JSON.stringify(requestBody)) + '/pg/v1/pay' + salt_key) + "###" + 1
+
+        PhonePePaymentSDK.startTransaction(
+          payload,
+          encodechecksusm,
+          null, null).then(async (a) => {
+
+            console.log(a.status === 'SUCCESS',merchantTransactionId)
+            const response = await axios.post('https://righten.in/api/services/pancard/payment_status_phonepe',
+              qs.stringify({
+                transactionId: txn_id,
+                merchantTransactionId: merchantTransactionId,
+              }),
+              {
+                headers: {
+                  'Content-Type': 'application/x-www-form-urlencoded',
+                },
+              }
+            );
+            if (a.status === 'SUCCESS') {
+              setPaymentCount(0);
+              navigation.navigate('main');
+              return true;
+            }
+          })
+
+      }).catch(e => {
+        console.log(e);
+      })
+
     } catch (error) {
       // console.log(error);
       showErrorToast();
     }
     // const url = '';
   };
-  if (loading) {
-    return (
-      <View style={styles.container}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
-  }
 
-  if (error) {
-    return (
-      <View style={styles.container}
-      >
-        <Text>Error: {error}</Text>
-      </View>
-    );
-  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
@@ -138,15 +143,13 @@ const PaymentPage = ({ route, navigation }) => {
           }}
 
         />
-        <Text style={[styles.username, { marginTop: 50 }]}>Payer Name:
-          {data.payer_name}
-        </Text>
+
         <Text style={styles.amount}>Amount: ₹
-          {data.pay_amount}
+          {service_data.offer_price}
         </Text>
         <TouchableOpacity style={styles.button} onPress={() => {
-          // console.log("predd");
-          handlePress(data.pay_url)
+          console.log("predd");
+          handlePress()
         }}>
           <Text style={styles.buttonText}>Pay Now</Text>
         </TouchableOpacity>

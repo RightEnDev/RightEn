@@ -15,7 +15,7 @@ import Type1_1 from '../ServiceForm/Type1_1';
 const ServiceForm = ({ route, navigation }) => {
     // const isFocused = useIsFocused();
 
-    const { service_code, service_data, app_icon } = route.params;
+    const { service_code, service_data, app_icon,offer_price } = route.params;
     // console.log("*************************************");
     // console.log(service_data);
 
@@ -38,6 +38,7 @@ const ServiceForm = ({ route, navigation }) => {
     )) {
         return (
             <Type1
+                service_data={service_data}
                 label={`${service_data.name} @ ${service_data.offer_price}`}
                 form_service_code={service_data.form_service_code}
                 form_service_id={service_data.form_service_id}

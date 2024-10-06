@@ -27,7 +27,7 @@ const screenWidth = Dimensions.get('window').width;
 import axios from 'axios';
 // console.log(screenWidth);
 const ImagePicker = ({ route, navigation }) => {
-  const { txn_id, pan_form_id } = route.params;
+  const { txn_id, pan_form_id,service_data } = route.params;
   // console.log(txn_id);
   // console.log(txn_id);
   const [loading, setLoading] = useState(false);
@@ -216,7 +216,7 @@ const ImagePicker = ({ route, navigation }) => {
           // Navigate to 'Payment' screen after 1 second
           setTimeout(() => {
             setPhotoUris([]);
-            navigation.navigate('Paymennt', { "txn_id": txn_id });
+            navigation.navigate('Paymennt', { "txn_id": txn_id ,"service_data":service_data});
           }, 1000);
 
         } else {
@@ -306,7 +306,7 @@ const ImagePicker = ({ route, navigation }) => {
           backgroundColor: '#FFCB0A', margin: 10, marginTop: 30, alignItems: 'center', justifyContent: 'center', height: 70, width: '70%', alignSelf: 'center'
           , borderRadius: 15
         }}>
-          <Text style={{ height: 50, textAlign: 'center', fontSize: 30, fontWeight: 'bold', color: 'black' }}>submit</Text>
+          <Text style={{ height: 50, textAlign: 'center', fontSize: 30, fontWeight: 'bold', color: 'black' }}>submit / pay now</Text>
         </View>
 
       </TouchableOpacity>
