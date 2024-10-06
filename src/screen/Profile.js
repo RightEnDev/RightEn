@@ -27,7 +27,7 @@ const Profile = ({ navigation }) => {
     const fetchData = async () => {
       try {
         const us_id = await AsyncStorage.getItem('us_id');
-        // console.log(us_id);
+        console.log(us_id,"clicked");
         // navigation.navigate('LoginScreen');
 
         try {
@@ -47,12 +47,15 @@ const Profile = ({ navigation }) => {
       }
     };
 
-    fetchData();
+    // fetchData();
     // const fetchUserData = async () => {
 
     // };
 
     // fetchUserData();
+    const refreashdata = navigation.addListener('focus', fetchData);
+
+    return refreashdata;
   }, [navigation]);
 
   const removeStoredItems = async () => {
@@ -93,7 +96,7 @@ const Profile = ({ navigation }) => {
       <View style={styles.container}>
         <View style={styles.upper_circle}>
           <View style={styles.inner_circle}>
-            {data.icon == null ?
+            {data.icon === null ?
               <Image
                 source={profileicon}
                 style={{
@@ -106,7 +109,20 @@ const Profile = ({ navigation }) => {
 
                 }}
               />
-              : <Text>g</Text>
+              : 
+              <Image
+                source={{uri: `https://righten.in/public/admin/assets/img/users/profile/${data.icon}`}}
+                style={{
+                  width: 175,
+                  height: 175,
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 500,
+                  zIndex:1
+
+                }}
+              />
             }
             {/* <Text>hello</Text> */}
           </View>

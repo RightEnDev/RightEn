@@ -78,7 +78,7 @@ const Type1 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
             name &&
             fatherName &&
             dateOfBirth &&
-            mobileNo
+            mobileNo && mobileNo.length === 10
         ) {
 
             // console.log('Submitted Data:', { user_id, panType, name, dateOfBirth, fatherName, mobileNo });
@@ -117,7 +117,7 @@ const Type1 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
                 setMobileNo('');
 
                 navigation.navigate('ImagePicker', {
-                    "pan_form_id": response.data.pan_form_id,
+                    "form_id": response.data.form_id,
                     "txn_id": response.data.data.txn_id,
                     "service_data": service_data
                 });

@@ -11,6 +11,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SvgXml } from 'react-native-svg';
 import { mobile_svg, passwordsvg, eye, eyeoff } from '../../assets/ALLSVG';
 import Toast from 'react-native-toast-message';
+import { CommonActions } from '@react-navigation/native';
 
 const LoginScreen = ({ navigation }) => {
   const [Mobile, setMobile] = useState('');
@@ -75,7 +76,13 @@ const LoginScreen = ({ navigation }) => {
 
         showSuccessToast();
         setTimeout(() => {
-          navigation.navigate('Home');
+          // navigation.navigate('Home');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Home' }],
+            })
+          );
         }, 1500); // 2000 milliseconds = 2 seconds
 
         // Alert.alert('Login Successful', 'You are now logged in.');

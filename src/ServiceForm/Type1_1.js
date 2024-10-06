@@ -10,7 +10,7 @@ import { SvgXml } from 'react-native-svg';
 import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, DOBSVG, datepicker, fatherNameSVG, MobileSVG, serviceSVG } from '../../assets/ALLSVG';
 import Toast from 'react-native-toast-message';
 
-const Type1_1 = ({ label, cardtype, form_service_code, form_sub_service_id, form_service_id, formSubmitUrl, navigation }) => {
+const Type1_1 = ({ service_data,label, cardtype, form_service_code, form_sub_service_id, form_service_id, formSubmitUrl, navigation }) => {
     // console.log("hello");
     // console.log(form_service_code,form_sub_service_id,form_service_id);
     const [formResponse, setformResponse] = useState([]);
@@ -80,94 +80,84 @@ const Type1_1 = ({ label, cardtype, form_service_code, form_sub_service_id, form
 
 
     const handleSubmit = async () => {
-        // Handle form submission here
-        const month = parseInt(MM, 10);
-        const day = parseInt(DD, 10);
-        // console.log(checked.form_csf_name ? 'Name':'');
-        // console.log(checked.form_csf_fname?'':'');
-        // // console.log();
 
-        // Validate the values
-        if (isNaN(month) || month < 1 || month > 12 || isNaN(day) || day < 1 || day > 31) {
-            Alert.alert("Validation Error", "The month or day is out of range");
-        }
-        else {
-            const user_id = await AsyncStorage.getItem('us_id');
-            const dateOfBirth = YYYY + '-' + MM + '-' + DD;
+        const user_id = await AsyncStorage.getItem('us_id');
+        const dateOfBirth = dob;
 
-            if (
-                user_id &&
-                form_service_id &&
-                form_service_code &&
-                form_sub_service_id &&
-                name &&
-                fatherName &&
-                dateOfBirth &&
-                mobileNo
-            ) {
+        if (
+            user_id &&
+            form_service_id &&
+            form_service_code &&
+            form_sub_service_id &&
+            name &&
+            fatherName &&
+            dateOfBirth &&
+            mobileNo && mobileNo.length === 10
+        ) {
 
-                // console.log('Submitted Data:', { user_id, panType, name, dateOfBirth, fatherName, mobileNo });
+            // console.log('Submitted Data:', { user_id, panType, name, dateOfBirth, fatherName, mobileNo });
 
-                const response = await axios.post(formSubmitUrl,
-                    qs.stringify({
-                        user_id: user_id,
-                        service_id: form_service_id,
-                        service_code: form_service_code,
-                        sub_service_id: form_sub_service_id,
-                        name: name,
-                        father_name: fatherName,
-                        date_of_birth: dateOfBirth,
-                        mobile: mobileNo,
-                        form_csf_name : checked.form_csf_name?'name':'',
-                        form_csf_fname : checked.form_csf_fname?'father_name':'',
-                        form_csf_dob:checked.form_csf_dob?'dob':'',
-                        form_csf_photo:checked.form_csf_photo?'photo':'',
-                        form_csf_signature:checked.form_csf_signature?'signature':'',
+            const response = await axios.post(formSubmitUrl,
+                qs.stringify({
+                    user_id: user_id,
+                    service_id: form_service_id,
+                    service_code: form_service_code,
+                    sub_service_id: form_sub_service_id,
+                    name: name,
+                    father_name: fatherName,
+                    date_of_birth: dateOfBirth,
+                    mobile: mobileNo,
+                    form_csf_name: checked.form_csf_name ? 'name' : '',
+                    form_csf_fname: checked.form_csf_fname ? 'father_name' : '',
+                    form_csf_dob: checked.form_csf_dob ? 'dob' : '',
+                    form_csf_photo: checked.form_csf_photo ? 'photo' : '',
+                    form_csf_signature: checked.form_csf_signature ? 'signature' : '',
 
-                    }),
-                    {
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                    }
-                );
-
-                if (response.data.status === 'success') {
-                    setformResponse(response.data.data);
-                    showSuccessToast(response.data.data.txn_id);
-                    setPanType('');
-                    setName('');
-                    setDD('');
-                    setMM('');
-                    setYYYY('');
-                    setDob('');
-                    setShowPicker(false);
-                    setSelectedDate(new Date());
-                    setFatherName('');
-                    setMobileNo('');
-                    setChecked({
-                        form_csf_name: false,
-                        form_csf_fname: false,
-                        form_csf_dob: false,
-                        form_csf_photo: false,
-                        form_csf_signature: false,
-                    });
-
-                    navigation.navigate('ImagePicker', {
-                        "pan_form_id": response.data.pan_form_id,
-                        "txn_id": response.data.data.txn_id,
-                    });
-
-
-                } else {
-                    showErrorToast();
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
                 }
-                // console.log(response.data.status === 'success');
-            } else {
-                Alert.alert("Enter all field");
+            );
 
+            if (response.data.status === 'success') {
+                setformResponse(response.data.data);
+                showSuccessToast(response.data.data.txn_id);
+                setPanType('');
+                setName('');
+                setDD('');
+                setMM('');
+                setYYYY('');
+                setDob('');
+                setShowPicker(false);
+                setSelectedDate(new Date());
+                setFatherName('');
+                setMobileNo('');
+                setChecked({
+                    form_csf_name: false,
+                    form_csf_fname: false,
+                    form_csf_dob: false,
+                    form_csf_photo: false,
+                    form_csf_signature: false,
+                });
+
+                navigation.navigate('ImagePicker', {
+                    "form_id": response.data.form_id,
+                    "txn_id": response.data.data.txn_id,
+                    "service_data": service_data
+                });
+
+
+            } else {
+                showErrorToast();
             }
+            // console.log(response.data.status === 'success');
+        } else {
+            Alert.alert("Enter all field");
+
         }
+
 
 
 
@@ -214,40 +204,24 @@ const Type1_1 = ({ label, cardtype, form_service_code, form_sub_service_id, form
 
                         <SvgXml xml={DOBSVG} />
                     </View>
-                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', paddingLeft: 5, paddingBottom: 5 }}>
+                    <TouchableOpacity onPress={() => setShowPicker(true)} style={{ flex: 1 }}>
                         <TextInput
-                            style={[styles.input, { width: '15%', borderBottomWidth: 2, borderColor: '#000' }]}
-                            value={DD}
-                            onChangeText={setDD}
+                            style={[styles.input, { width: '100%' }]}
+                            value={dob}
+                            placeholder="Select Date of Birth"
                             placeholderTextColor="black"
-                            maxLength={2}
-                            keyboardType="numeric"
-                            placeholder="DD"
-
+                            editable={false}
                         />
-                        <Text style={{ fontSize: 20 }}>/</Text>
-                        <TextInput
-                            style={[styles.input, { width: '20%', borderBottomWidth: 2, borderColor: '#000' }]}
-                            value={MM}
-                            onChangeText={setMM}
-                            placeholderTextColor="black"
-                            maxLength={2}
-                            keyboardType="numeric"
-                            placeholder="MM"
-
+                    </TouchableOpacity>
+                    {showPicker && (
+                        <DateTimePicker
+                            value={selectedDate}
+                            mode="date"
+                            display="spinner" // Use "spinner" for better UX on mobile
+                            maximumDate={new Date()}
+                            onChange={handleDateChange}
                         />
-                        <Text style={{ fontSize: 20 }}>/</Text>
-                        <TextInput
-                            style={[styles.input, { width: '30%', borderBottomWidth: 2, borderColor: '#000' }]}
-                            value={YYYY}
-                            onChangeText={setYYYY}
-                            placeholderTextColor="black"
-                            maxLength={4}
-                            keyboardType="numeric"
-                            placeholder="YYYY"
-
-                        />
-                    </View>
+                    )}
 
                 </View>
 

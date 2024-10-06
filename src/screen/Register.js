@@ -10,6 +10,7 @@ import { mobile_svg, passwordsvg, eye, eyeoff } from '../../assets/ALLSVG';
 import Toast from 'react-native-toast-message';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { CommonActions } from '@react-navigation/native';
 
 
 const Register = ({ navigation }) => {
@@ -244,7 +245,13 @@ const Register = ({ navigation }) => {
         showSuccessToast(response.data.password,response.data.user_i5);
 
         setTimeout(() => {
-          navigation.navigate('Home');
+          // navigation.navigate('Home');
+          navigation.dispatch(
+            CommonActions.reset({
+              index: 0,
+              routes: [{ name: 'Home' }],
+            })
+          );
         }, 2000); // 2000 milliseconds = 2 seconds
 
       } else {

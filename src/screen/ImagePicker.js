@@ -27,7 +27,7 @@ const screenWidth = Dimensions.get('window').width;
 import axios from 'axios';
 // console.log(screenWidth);
 const ImagePicker = ({ route, navigation }) => {
-  const { txn_id, pan_form_id,service_data } = route.params;
+  const { txn_id, form_id,service_data } = route.params;
   // console.log(txn_id);
   // console.log(txn_id);
   const [loading, setLoading] = useState(false);
@@ -180,7 +180,10 @@ const ImagePicker = ({ route, navigation }) => {
 
         const formData = new FormData();
         formData.append('user_id', us_id);
-        formData.append('pan_form_id', pan_form_id);
+        formData.append('form_id', form_id);
+        formData.append('txn_id', txn_id);
+
+        
 
         for (let i = 0; i < photoUris.length; i++) {
           const uri = photoUris[i];
@@ -201,7 +204,7 @@ const ImagePicker = ({ route, navigation }) => {
           }
         }
 
-        const response = await axios.post('https://righten.in/api/services/pancard/upload', formData, {
+        const response = await axios.post(service_data.fileUploadURl, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },
