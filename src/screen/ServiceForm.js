@@ -10,6 +10,9 @@ import { mobile_svg, settingsSVG, profileSVG, reportSVG, eye, eyeoff, nameSVG, D
 import Type1 from '../ServiceForm/Type1';
 import Type1_1 from '../ServiceForm/Type1_1';
 import Type2 from '../ServiceForm/Type2';
+import Type3 from '../ServiceForm/Type3';
+import Type4 from '../ServiceForm/Type4';
+import Type5 from '../ServiceForm/Type5';
 
 // import { useIsFocused } from '@react-navigation/native';
 
@@ -81,6 +84,86 @@ const ServiceForm = ({ route, navigation }) => {
                 navigation={navigation}
                 formSubmitUrl="https://righten.in/api/services/insurance/save"
                 cardtype="Insurance"
+                
+            />
+        )
+    }
+    if (service_data.form_service_code === "REITR" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/income_tax/upload"
+        return (
+            <Type3
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/income_tax/save"
+                cardtype="ITR"
+                
+            />
+        )
+    }
+    if (service_data.form_service_code === "REGST" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/gst/upload"
+        return (
+            <Type3
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/gst/save"
+                cardtype="GST"
+                
+            />
+        )
+    }
+    if (service_data.form_service_code === "REFSSAI" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/fssai/upload"
+        return (
+            <Type3
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/fssai/save"
+                cardtype="GST"
+                
+            />
+        )
+    }
+    if (service_data.form_service_code === "REPANS" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/surrander/upload"
+        return (
+            <Type4
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/surrander/save"
+                cardtype="SURRANDER"
+                
+            />
+        )
+    }
+    if (service_data.form_service_code === "REPAS" ) {
+        service_data.fileUploadURl="https://righten.in/api/services/passport/upload"
+        return (
+            <Type5
+                service_data={service_data}
+                label={`${service_data.name} @ ${service_data.offer_price}`}
+                form_service_code={service_data.form_service_code}
+                form_service_id={service_data.form_service_id}
+                form_sub_service_id={service_data.form_sub_service_id}
+                navigation={navigation}
+                formSubmitUrl="https://righten.in/api/services/passport/save"
+                cardtype="Passport"
                 
             />
         )

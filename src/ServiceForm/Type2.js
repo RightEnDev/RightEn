@@ -182,7 +182,7 @@ const Type2 = ({ service_data, label, cardtype, form_service_code, form_sub_serv
                         style={styles.input}
                         value={bikeNo}
                         onChangeText={setBikeNO}
-                        placeholder="Enter Father's Name"
+                        placeholder="Enter Bike No"
                         placeholderTextColor="black"
                     />
                 </View>

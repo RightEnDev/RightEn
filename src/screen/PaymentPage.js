@@ -7,6 +7,7 @@ import qs from 'qs';
 import Toast from 'react-native-toast-message';
 import PhonePePaymentSDK from 'react-native-phonepe-pg'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import LottieView from 'lottie-react-native';
 
 
 import Base64 from 'react-native-base64'
@@ -18,6 +19,7 @@ const PaymentPage = ({ route, navigation }) => {
   // console.log(parseFloat(service_data.offer_price) * 100);
   // console.log(txn_id, "----------------------------------------------------------------------------------");
   const [paymentCount, setPaymentCount] = useState(0);
+  const [showSuccess, setShowSuccess] = useState(false);
 
 
   useFocusEffect(
@@ -88,8 +90,8 @@ const PaymentPage = ({ route, navigation }) => {
           encodechecksusm,
           null, null).then(async (a) => {
 
-            console.log(a.status === 'SUCCESS',merchantTransactionId)
-            const response = await axios.post('https://righten.in/api/services/pancard/payment_status_phonepe',
+            console.log(a.status === 'SUCCESS', merchantTransactionId)
+            const response = await axios.post('https://righten.in/api/services/payment_status_phonepe',
               qs.stringify({
                 transactionId: txn_id,
                 merchantTransactionId: merchantTransactionId,
@@ -102,8 +104,12 @@ const PaymentPage = ({ route, navigation }) => {
             );
             if (a.status === 'SUCCESS') {
               setPaymentCount(0);
-              navigation.navigate('main');
-              return true;
+              setShowSuccess(true)
+              setTimeout(() => {
+                setShowSuccess(false)
+                navigation.navigate('main');
+                return true;
+              }, 1500);
             }
           })
 
@@ -120,7 +126,50 @@ const PaymentPage = ({ route, navigation }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.content}>
+      {!showSuccess ?
+        <View style={styles.content}>
+          
+
+          <Text style={styles.username}>Pay To:  RightEN.in</Text>
+          <Image
+            source={logo}
+            style={{
+              width: 300,
+              height: undefined,
+              aspectRatio: 5,
+            }}
+
+          />
+
+          <Text style={styles.amount}>Amount: ₹
+            {service_data.offer_price}
+          </Text>
+          <TouchableOpacity style={styles.button} onPress={() => {
+            console.log("predd");
+            handlePress()
+          }}>
+            <Text style={styles.buttonText}>Pay Now</Text>
+          </TouchableOpacity>
+        </View>
+        :
+        <View >
+          <Image
+                source={require('../../assets/success.gif')}
+                style={{
+                  width: 175,
+                  height: 175,
+                  alignItems: 'center',
+                  alignSelf: 'center',
+                  justifyContent: 'center',
+                  borderRadius: 500
+
+                }}
+              />
+        </View>
+
+
+      }
+      {/* <View style={styles.content}>
         <View
           style={{
             position: 'relative',
@@ -133,6 +182,7 @@ const PaymentPage = ({ route, navigation }) => {
         >
           <Toast />
         </View>
+        
         <Text style={styles.username}>Pay To:  RightEN.in</Text>
         <Image
           source={logo}
@@ -153,7 +203,7 @@ const PaymentPage = ({ route, navigation }) => {
         }}>
           <Text style={styles.buttonText}>Pay Now</Text>
         </TouchableOpacity>
-      </View>
+      </View> */}
     </SafeAreaView>
   )
 }
@@ -165,7 +215,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#ffffff',
   },
   content: {
     width: '90%',
