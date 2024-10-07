@@ -158,6 +158,7 @@ const History = ({ navigation }) => {
   };
   useEffect(() => {
     // console.log("trying");
+    setShowDoc(false);
     fetchData();
     fetchOptionData();
   }, [isFocused, startDate, endDate, value]);
