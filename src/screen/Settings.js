@@ -285,6 +285,7 @@ const Settings = ({ navigation }) => {
         <Text style={styles.paragraph}>
           Thank you for choosing RightEn – the right place for your insurance needs. We are dedicated to providing you with the highest level of service and assistance throughout your insurance journey.
         </Text>
+        <Text style={styles.subheading}>App Version - V 1</Text>
       </ScrollView>
     </View>
   );

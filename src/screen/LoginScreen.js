@@ -18,7 +18,9 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-
+  const [showNotice, setShowNotice] = useState(false);
+  const [notice, setNotice] = useState('')
+  // console.log(notice);
   const togglePasswordVisibility = () => {
     setIsPasswordVisible(!isPasswordVisible);
   };
@@ -73,17 +75,25 @@ const LoginScreen = ({ navigation }) => {
         await AsyncStorage.setItem('userEmail', response.data.data.email);
         await AsyncStorage.setItem('userPassword', password);
         await AsyncStorage.setItem('us_id', response.data.data.id);
-
+        const notice = response.data.data.notice;
         showSuccessToast();
-        setTimeout(() => {
-          // navigation.navigate('Home');
-          navigation.dispatch(
-            CommonActions.reset({
-              index: 0,
-              routes: [{ name: 'Home' }],
-            })
-          );
-        }, 1500); // 2000 milliseconds = 2 seconds
+        if (notice) {
+          console.log('notice');
+          setNotice(response.data.data.notice);
+          setShowNotice(true);
+          
+        } else {
+          setTimeout(() => {
+            // navigation.navigate('Home');
+            navigation.dispatch(
+              CommonActions.reset({
+                index: 0,
+                routes: [{ name: 'Home' }],
+              })
+            );
+          }, 1500); // 2000 milliseconds = 2 seconds
+
+        }
 
         // Alert.alert('Login Successful', 'You are now logged in.');
 
@@ -95,6 +105,7 @@ const LoginScreen = ({ navigation }) => {
       // Alert.alert('Error', 'Something went wrong. Please try again later.');
     }
   };
+
 
   return (
     <ImageBackground
@@ -114,75 +125,114 @@ const LoginScreen = ({ navigation }) => {
       >
         <Toast />
       </View>
-      {/* <Toast /> */}
+
       <View style={styles.container}>
-        <View style={styles.inner_container}>
-          <Image source={LOGO} style={styles.logo_image} />
-          {/* <Button title="Show toast" onPress={showSuccessToast} /> */}
+        {showNotice == true ?
+          <>
+            <View style={styles.inner_container}>
+              <View style={{paddingVertical:20,marginBottom:15,marginTop:15,borderRadius:25}}>
+              <Text style={{fontSize:24,fontWeight:'bold' ,color:'red'}}>Notice *</Text>
+                <Text>
+                 
+                  <Text style={{fontSize:20,fontWeight:'normal' ,color:'black'}}>{notice}</Text>
+                </Text>
+              </View>
 
-          <Text style={styles.title}>Login</Text>
 
-          <View style={styles.passwordContainer}>
-            <SvgXml xml={mobile_svg} />
+              <View style={{ justifyContent: 'center', alignItems: 'center', }}>
 
 
-            <TextInput
-              style={[styles.input, { flex: 1 }]}
-              placeholder="Mobile No"
-              placeholderTextColor="#000000"
-              keyboardType="numeric"
-              value={Mobile}
-              onChangeText={setMobile}
-              maxLength={10}
-            />
-          </View>
-          <View style={[styles.passwordContainer, {
-            marginTop: 10
-          }]}>
-            <SvgXml xml={passwordsvg} />
+                <TouchableOpacity onPress={() => {
+                  console.log('closed noticce');
+                  setNotice('');
+                  setShowNotice(false);
+                  navigation.dispatch(
+                    CommonActions.reset({
+                      index: 0,
+                      routes: [{ name: 'Home' }],
+                    })
+                  );
+                }}>
+                  <Text style={{
+                    borderWidth: 3, fontSize: 24, paddingHorizontal: 20, paddingVertical: 5, borderRadius: 15,
+                    borderColor: 'red', color: 'red', fontWeight: 'bold'
+                  }}>close</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </>
 
-            <TextInput
-              style={[styles.input, { flex: 1 }]}
-              placeholderTextColor="#000000"
-              placeholder="Password"
-              secureTextEntry={!isPasswordVisible}
-              value={password}
-              onChangeText={setPassword}
-            />
-            <TouchableOpacity onPress={togglePasswordVisibility}>
-              <SvgXml
-                xml={isPasswordVisible ? eyeoff
-                  : eye
-                }
-                size={30}
-                color="#FFCB0A"
+          :
+          <View style={styles.inner_container}>
+            <Image source={LOGO} style={styles.logo_image} />
+            {/* <Button title="Show toast" onPress={showSuccessToast} /> */}
+
+            <Text style={styles.title}>Login</Text>
+
+            <View style={styles.passwordContainer}>
+              <SvgXml xml={mobile_svg} />
+
+
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholder="Mobile No"
+                placeholderTextColor="#000000"
+                keyboardType="numeric"
+                value={Mobile}
+                onChangeText={setMobile}
+                maxLength={10}
               />
+            </View>
+            <View style={[styles.passwordContainer, {
+              marginTop: 10
+            }]}>
+              <SvgXml xml={passwordsvg} />
+
+              <TextInput
+                style={[styles.input, { flex: 1 }]}
+                placeholderTextColor="#000000"
+                placeholder="Password"
+                secureTextEntry={!isPasswordVisible}
+                value={password}
+                onChangeText={setPassword}
+              />
+              <TouchableOpacity onPress={togglePasswordVisibility}>
+                <SvgXml
+                  xml={isPasswordVisible ? eyeoff
+                    : eye
+                  }
+                  size={30}
+                  color="#FFCB0A"
+                />
+              </TouchableOpacity>
+            </View>
+            {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
+            <TouchableOpacity style={styles.login_buton} title="Login" onPress={handleLogin} >
+              <Text style={{
+                fontSize: 20, fontFamily: 'BAUHS93', fontWeight: 'bold', color: '#FFFFFF'
+              }}>Log In</Text>
             </TouchableOpacity>
+
+            <TouchableOpacity onPress={() => {
+              navigation.navigate('Register')
+            }}>
+
+
+              <Text style={{
+                fontSize: 20,
+                marginTop: 20,
+                marginBottom: 20,
+                textAlign: 'center',
+                color: '#000',
+                // borderBottomWidth:1,
+              }}>Not have an account? Register</Text>
+            </TouchableOpacity>
+
+
           </View>
-          {errorMessage ? <Text style={styles.error}>{errorMessage}</Text> : null}
-          <TouchableOpacity style={styles.login_buton} title="Login" onPress={handleLogin} >
-            <Text style={{
-              fontSize: 20, fontFamily: 'BAUHS93', fontWeight: 'bold', color: '#FFFFFF'
-            }}>Log In</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={()=>{
-            navigation.navigate('Register')
-          }}>
+        }
 
 
-          <Text style={{
-            fontSize: 20,
-            marginTop:20,
-            marginBottom: 20,
-            textAlign: 'center',
-            color: '#000',
-            // borderBottomWidth:1,
-          }}>Not have an account? Register</Text>
-          </TouchableOpacity>
-
-
-        </View>
       </View>
     </ImageBackground>
   );

@@ -167,6 +167,7 @@ const PaymentPage = ({ route, navigation }) => {
           width: 300,
           justifyContent: 'center',
           alignItems: 'center',
+          borderRadius:15
         }}>
           <Image
             source={require('../../assets/success.gif')}
@@ -180,6 +181,7 @@ const PaymentPage = ({ route, navigation }) => {
 
             }}
           />
+          <Text style={{fontSize:24,fontWeight:'bold',color:'#009743'}}>Payment Success </Text>
         </View>
       </View>
 

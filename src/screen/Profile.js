@@ -27,6 +27,10 @@ const Profile = ({ navigation }) => {
     const fetchData = async () => {
       try {
         const us_id = await AsyncStorage.getItem('us_id');
+        if(!us_id){
+          navigation.navigate('LoginScreen'); 
+          return ;
+        }
         console.log(us_id,"clicked");
         // navigation.navigate('LoginScreen');
 
@@ -92,6 +96,8 @@ const Profile = ({ navigation }) => {
     );
   }
   return (
+    data && data.user_id?
+
     <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
       <View style={styles.container}>
         <View style={styles.upper_circle}>
@@ -226,6 +232,8 @@ const Profile = ({ navigation }) => {
 
       </View>
     </ScrollView>
+    :
+    null
   )
 }
 

@@ -270,6 +270,7 @@ function TabNavigator() {
         options={{
           tabBarButton: () => null,
           headerTitle: '',
+          headerShown: false
         }}
       />
       <Tab.Screen
@@ -278,6 +279,7 @@ function TabNavigator() {
         options={{
           tabBarButton: () => null,
           headerTitle: '',
+          headerShown: false
         }}
       />
       <Tab.Screen
@@ -294,6 +296,7 @@ function TabNavigator() {
         options={{
           tabBarButton: () => null,
           headerTitle: '',
+          headerShown: false
         }}
       />
       <Tab.Screen
@@ -302,6 +305,7 @@ function TabNavigator() {
         options={{
           tabBarButton: () => null,
           headerTitle: '',
+          headerShown: false
         }}
       />
 

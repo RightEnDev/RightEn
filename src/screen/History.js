@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, FlatList, ScrollView } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Platform, ActivityIndicator, FlatList, ScrollView, Button, Alert, PermissionsAndroid, Linking } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { BackHandler } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
@@ -9,10 +9,13 @@ import qs from 'qs';
 import { useIsFocused } from '@react-navigation/native';
 import { SvgXml } from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { WebView } from 'react-native-webview';
+import RNFS from 'react-native-fs';
+import { check, request, PERMISSIONS, RESULTS } from 'react-native-permissions';
 
 const History = ({ navigation }) => {
   const isFocused = useIsFocused();
+
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -21,13 +24,63 @@ const History = ({ navigation }) => {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
-
+  const [showDoc, setShowDoc] = useState(false);
+  const [selectitem, setselectitem] = useState([])
   // const [research, serSearch] = useState();
+  const [searchdata, setsearchdata] = useState([])
 
+  const getSearchData = async () => {
+    if (selectitem && selectitem.action) {
+      setsearchdata([])
+      console.log(selectitem.action);
+      const response = await axios.get(selectitem.action);
+
+
+      // const response = await axios.get('https://righten.in/api/services/view_all_data?service_id=2&row_id=MTYzNA==');
+      console.log(response.data.data);
+      setsearchdata(response.data.data)
+    }
+    // console.log(selectitem.action);
+
+  }
+
+  useEffect(() => {
+    getSearchData();
+  }, [selectitem])
 
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const downloadFile = (url) => {
+    const extension = url.split('.').pop(); // Extract the file extension from the URL
+    const filePath =
+      Platform.OS === 'android'
+        ? RNFS.DownloadDirectoryPath + `/righten${Date.now()}.${extension}`
+        : RNFS.DocumentDirectoryPath + `/righten${Date.now()}.${extension}`;
+
+    console.log('File path:', filePath);
+
+    RNFS.downloadFile({
+      fromUrl: url,
+      toFile: filePath,
+      background: true, // Enable downloading in the background (iOS only)
+      discretionary: true, // Allow the OS to control the timing and speed (iOS only)
+      progress: (res) => {
+        const progress = (res.bytesWritten / res.contentLength) * 100;
+        console.log(`Progress: ${progress.toFixed(2)}%`);
+      },
+    })
+      .promise.then((response) => {
+        console.log(response.statusCode);
+        console.log('File downloaded!', response);
+      })
+      .catch((err) => {
+        console.log('Download error:', err);
+      });
+  };
+
+
+
 
   const fetchData = async () => {
     try {
@@ -37,7 +90,7 @@ const History = ({ navigation }) => {
       const us_id = await AsyncStorage.getItem('us_id');
       // console.log(startDate.toISOString().split('T')[0]);
       // console.log(endDate.toISOString().split('T')[0]);
-      const response = await axios.post('https://righten.in/api/services/report/upi',
+      const response = await axios.post('https://righten.in/api/services/report',
         qs.stringify({
           user_id: us_id,
           service_id: value,
@@ -124,6 +177,8 @@ const History = ({ navigation }) => {
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
+        setShowDoc(false);
+        setsearchdata([]);
         navigation.navigate('main'); // Navigate back to the main screen
         return true; // Prevent the default behavior
       };
@@ -152,6 +207,254 @@ const History = ({ navigation }) => {
       </View>
     );
   }
+  if (showDoc) {
+    // console.log(selectitem);
+    // console.log(response.data.status);
+    return (
+      <ScrollView style={{ backgroundColor: "white" }}>
+        <View style={{ backgroundColor: 'white', paddingHorizontal: 14 }} >
+
+
+          <View style={{ alignItems: 'center', borderBottomWidth: 1 }}>
+            <Text style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}>Retailer Details</Text>
+          </View>
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>Name </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.user_name}</Text>
+            </View>
+          </View>
+
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>User </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.user_id}</Text>
+            </View>
+          </View>
+
+
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>Mobile </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.user_mobile}</Text>
+            </View>
+          </View>
+
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>Village </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.vill}</Text>
+            </View>
+          </View>
+
+
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>Block </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.block}</Text>
+            </View>
+          </View>
+
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>District </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.city}</Text>
+            </View>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>State </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.state}</Text>
+            </View>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>Pin </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.pin}</Text>
+            </View>
+          </View>
+
+
+
+
+
+          <View style={{ alignItems: 'center', borderBottomWidth: 1 }}>
+            <Text style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}>Customer Details</Text>
+          </View>
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>Name </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.name}</Text>
+            </View>
+          </View>
+
+
+
+
+
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>Mobile </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.mobile}</Text>
+            </View>
+          </View>
+
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>TXN </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.txn_id}</Text>
+            </View>
+          </View>
+
+
+
+          <View style={{ flexDirection: 'row', justifyContent: 'flex-start', marginBottom: 5 }}>
+            <View style={{ width: 100 }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>UTR </Text>
+            </View>
+            <View style={{ flex: 1, }}>
+              <Text style={{ fontSize: 16, color: 'black' }}>:{'  '}{searchdata.utr_no}</Text>
+            </View>
+          </View>
+
+
+          <View style={{ alignItems: 'center', borderBottomWidth: 1 }}>
+            <Text style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}>Documents</Text>
+          </View>
+
+          {/* {searchdata.retail_img.length()} */}
+          <View>
+            {searchdata?.retail_img ? (
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+                {Object.values(searchdata.retail_img).map((item, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      width: '30%', // Each item takes up 30% of the width
+                      marginBottom: 10, // Margin between rows
+                    }}
+                  >
+                    {item.file_path ? (
+                      // {/* {searchdata.retail_img_path} */}
+                      //   {/* {item.file_path} */}
+                      <TouchableOpacity onPress={() => {
+                        console.log(searchdata.retail_img_path + item.file_path);
+                        downloadFile(searchdata.retail_img_path + item.file_path)
+                      }}>
+
+                        <Text style={{
+                          fontSize: 20, color: 'white', borderWidth: 1, fontWeight: 'bold', borderColor: "#009743",
+                          borderRadius: 5, paddingHorizontal: 10, backgroundColor: "#009743", paddingVertical: 5,
+                          textAlign: 'center', marginTop: 15
+                        }}>Download</Text>
+                      </TouchableOpacity>
+
+                    ) : null}
+                  </View>
+                ))}
+              </View>
+            ) : (
+              null
+            )}
+          </View>
+          {searchdata.coupon_no ?
+            <View>
+
+              <View style={{ alignItems: 'center', borderBottomWidth: 1 }}>
+                <Text style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}>Tracking</Text>
+              </View>
+              <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold', textAlign: 'center',padding:15 }}>Coupon No : {' '}
+                <Text style={{ fontSize: 16, color: 'black', fontWeight: 'bold', backgroundColor: 'yellow' }}>{searchdata.coupon_no}</Text>
+
+              </Text>
+
+            </View>
+            : null}
+
+
+
+          <View style={{ alignItems: 'center', borderBottomWidth: 1 }}>
+            <Text style={{ fontSize: 20, color: 'black', fontWeight: 'bold' }}>Admin Documents</Text>
+          </View>
+
+          <View>
+            {searchdata?.admin_img ? (
+              <View style={{ flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'space-evenly' }}>
+                {Object.values(searchdata.admin_img).map((item, index) => (
+                  <View
+                    key={index}
+                    style={{
+                      width: '30%', // Each item takes up 30% of the width
+                      marginBottom: 10, // Margin between rows
+                    }}
+                  >
+                    {item.file_path ? (
+                      // {/* {searchdata.retail_img_path} */}
+                      //   {/* {item.file_path} */}
+                      <TouchableOpacity onPress={() => {
+                        console.log(searchdata.admin_img_path + item.file_path);
+                        downloadFile(searchdata.admin_img_path + item.file_path)
+                      }}>
+
+                        <Text style={{
+                          fontSize: 20, color: 'white', borderWidth: 1, fontWeight: 'bold', borderColor: "#009743",
+                          borderRadius: 5, paddingHorizontal: 10, backgroundColor: "#009743", paddingVertical: 5,
+                          textAlign: 'center', marginTop: 15
+                        }}>Download</Text>
+                      </TouchableOpacity>
+
+                    ) : null}
+                  </View>
+                ))}
+              </View>
+            ) : (
+              null
+            )}
+          </View>
+
+
+
+
+
+
+
+
+
+
+        </View>
+      </ScrollView>
+    )
+  }
   const renderItem = ({ item }) => {
     return (
       <View>
@@ -160,7 +463,28 @@ const History = ({ navigation }) => {
           padding: 10,
           borderBottomWidth: 1
         }}>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, borderRightWidth: 1 }}>{item.user_id}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, borderRightWidth: 1 }}>{item.id}
+
+          </Text>
+          <View style={{ borderRightWidth: 1 }}>
+            <TouchableOpacity onPress={() => {
+              // console.log("clicked");
+              // console.log(item);
+              setselectitem(item);
+              setShowDoc(true)
+            }}>
+              <Text style={{
+                fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10, marginRight: 10,
+                backgroundColor: '#22cc62',
+                color: 'white', fontWeight: 'bold',
+
+              }}>Show</Text>
+
+
+            </TouchableOpacity>
+
+          </View>
+
 
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>{item.service_name}</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10, borderRightWidth: 1 }}>{item.amount}</Text>
@@ -196,7 +520,12 @@ const History = ({ navigation }) => {
           borderBottomWidth: 1
         }}>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, borderRightWidth: 1 }}>Id</Text>
+          <View style={{ borderRightWidth: 1 }}>
+            <Text style={{
+              fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10, marginRight: 10
 
+            }}>Action</Text>
+          </View>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>Service Name</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10, borderRightWidth: 1 }}>amount</Text>
 
@@ -316,7 +645,7 @@ const History = ({ navigation }) => {
         <View style={{
           flexDirection: 'column',
           paddingBottom: 10,
-          marginTop: 30, width: 1500
+          marginTop: 30, width: 1600
         }}>
           <HeaderItem />
           <FlatList

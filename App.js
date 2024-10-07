@@ -69,103 +69,114 @@ const styles = StyleSheet.create({
 });
 
 
+// import React, { useEffect } from 'react';
+// import { View, Button, Platform } from 'react-native';
+// import RNFS from 'react-native-fs';
 
-// import { Button, StyleSheet, Text, View, TextInput } from 'react-native'
-// import React, { useState } from 'react'
-// import axios from 'axios'
+// const App1 = () => {
+//   useEffect(() => {
+//     const filePath =
+//       Platform.OS === 'android'
+//         ? RNFS.DownloadDirectoryPath + '/example.pdf'
+//         : RNFS.DocumentDirectoryPath + '/example.pdf';
 
-// import PhonePePaymentSDK from 'react-native-phonepe-pg'
-// import Base64 from 'react-native-base64'
-// import sha256 from 'sha256'
-// const App = () => {
-//   const [mobileNumber, setMobileNumber] = useState('8436201492');
-//   const [error, setError] = useState('');
+//     // Optional: Delete the file if it exists before downloading
+//     RNFS.unlink(filePath)
+//       .then(() => {
+//         console.log('Previous file deleted');
+//       })
+//       .catch((err) => {
+//         console.log('File does not exist or deletion failed:', err.message);
+//       });
+//   }, []);
 
-//   const handleSubmit = () => {
-//     // Validate: Check if the number is 10 digits
-//     if (/^\d{10}$/.test(mobileNumber)) {
-//       setError('');
-//       alert('Mobile number is valid!'); // Replace with your logic
-//     } else {
-//       setError('Invalid mobile number. Must be 10 digits.');
-//     }
-//   };
+//   const downloadFile = () => {
+//     const url = 'http://www.pdf995.com/samples/pdf.pdf';
+//     const filePath =
+//       Platform.OS === 'android'
+//         ? RNFS.DownloadDirectoryPath + '/example.pdf'
+//         : RNFS.DocumentDirectoryPath + '/example.pdf';
 
-
-//   const startTransac = () => {
-//     console.log("-------------------------------------------------------------------------------------------------------------------------------------");
-//     const environmentForSDK = 'PRODUCTION'; // SANDBOX PRODUCTION
-//     const merchantId = 'M22BD1522HQFO'; // PGTESTPAYUAT M22BD1522HQFO
-//     const salt_key = '7a9c42b8-a73c-45f6-8d4f-13728d0e1966';
-//     //  7a9c42b8-a73c-45f6-8d4f-13728d0e1966
-//     const appId = null;
-//     const enableLogging = true;
-//     PhonePePaymentSDK.init(
-//       environmentForSDK,
-//       merchantId,
-//       appId,
-//       enableLogging
-//     ).then(result => {
-//       console.log(`phone pe sdk init success   for   ${environmentForSDK} ${merchantId} ${salt_key}`);
-//       const merchantTransactionId = "R" + Date.now().toString() + Math.floor(Math.random() * 10000).toString();
-//       console.log('merchantTransactionId : ', merchantTransactionId);
-//       const requestBody = {
-//         "merchantId": merchantId,
-//         "merchantTransactionId": merchantTransactionId,
-//         "merchantUserId": 'R0007',
-//         "amount": 100,
-//         "redirectMode": "POST",
-//         "paymentInstrument": {
-//           "type": "PAY_PAGE"
-//         }
-//       }
-//       const payload = Base64.encode(JSON.stringify(requestBody));
-//       console.log('payload   ', typeof (payload), "  ", payload);
-//       const encodechecksusm = sha256(Base64.encode(JSON.stringify(requestBody)) + '/pg/v1/pay' + salt_key) + "###" + 1
-
-//       console.log("encodechecksusm     ", typeof (encodechecksusm), "  ", encodechecksusm);
-
-//       PhonePePaymentSDK.startTransaction(
-//         payload,
-//         encodechecksusm,
-//         null, null).then(async (a) => {
-//           const response = await axios.get('https://iamankanghosh.github.io/VerifyMyJson/checkJson.json', {
-//             headers: {
-//               'Cache-Control': 'no-cache',
-//               'Pragma': 'no-cache',
-//               'Expires': '0',
-//             },
-//           });
-//           console.log(response.data.builddAPP);
-//           console.log(a)
-//         })
-
-//     }).catch(e => {
-//       console.log(e);
+//     RNFS.downloadFile({
+//       fromUrl: url,
+//       toFile: filePath,
+//       background: true, // Enable downloading in the background (iOS only)
+//       discretionary: true, // Allow the OS to control the timing and speed (iOS only)
+//       progress: (res) => {
+//         const progress = (res.bytesWritten / res.contentLength) * 100;
+//         console.log(`Progress: ${progress.toFixed(2)}%`);
+//       },
 //     })
-//   }
+//       .promise.then((response) => {
+//         console.log('File downloaded!', response);
+//       })
+//       .catch((err) => {
+//         console.log('Download error:', err);
+//       });
+//   };
 
 //   return (
 //     <View>
-//       <Text style={{ marginTop: 50 }}>Payment Page</Text>
-//       <TextInput
-//         style={{ borderWidth: 1, margin: 5 }}
-//         placeholder="Enter Mobile Number"
-//         keyboardType="numeric"
-//         maxLength={10}
-//         value={mobileNumber}
-//         onChangeText={setMobileNumber}
-//       />
-//       {error ? <Text style={styles.error}>{error}</Text> : null}
-
-//       <Button
-//         onPress={startTransac}
-//         title="Transaction"
-//         color="blue"
-//         accessibilityLabel="Learn more about this purple button"
-//       />
+//       <Button title="Download File" onPress={downloadFile} />
 //     </View>
-//   )
-// }
+//   );
+// };
 
-// export default App
+// export default App;
+
+
+
+// import React, { useEffect } from 'react';
+// import { View, Button, Platform } from 'react-native';
+// import RNFS from 'react-native-fs';
+
+// const App = () => {
+//   useEffect(() => {
+//     const filePath =
+//       Platform.OS === 'android'
+//         ? RNFS.DownloadDirectoryPath + '/example.pdf'
+//         : RNFS.DocumentDirectoryPath + '/example.pdf';
+
+//     // Optional: Delete the file if it exists before downloading
+//     RNFS.unlink(filePath)
+//       .then(() => {
+//         console.log('Previous file deleted');
+//       })
+//       .catch((err) => {
+//         console.log('File does not exist or deletion failed:', err.message);
+//       });
+//   }, []);
+
+//   const downloadFile = () => {
+//     const url = 'http://www.pdf995.com/samples/pdf.pdf';
+//     const filePath =
+//       Platform.OS === 'android'
+//         ? RNFS.DownloadDirectoryPath + '/example.pdf'
+//         : RNFS.DocumentDirectoryPath + '/example.pdf';
+
+//     RNFS.downloadFile({
+//       fromUrl: url,
+//       toFile: filePath,
+//       background: true, // Enable downloading in the background (iOS only)
+//       discretionary: true, // Allow the OS to control the timing and speed (iOS only)
+//       progress: (res) => {
+//         const progress = (res.bytesWritten / res.contentLength) * 100;
+//         console.log(`Progress: ${progress.toFixed(2)}%`);
+//       },
+//     })
+//       .promise.then((response) => {
+//         console.log('File downloaded!', response);
+//       })
+//       .catch((err) => {
+//         console.log('Download error:', err);
+//       });
+//   };
+
+//   return (
+//     <View>
+//       <Button title="Download File" onPress={downloadFile} />
+//     </View>
+//   );
+// };
+
+// export default App;
