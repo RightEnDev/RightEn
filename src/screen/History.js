@@ -293,7 +293,7 @@ const History = ({ navigation }) => {
           borderBottomWidth: 1
         }}>
 
-          <View style={{ borderRightWidth: 1 }}>
+          <View style={{  }}>
             <TouchableOpacity onPress={() => {
 
               navigation.navigate('ShowDetails', {
@@ -313,14 +313,14 @@ const History = ({ navigation }) => {
 
           </View>
 
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>{item.customer_name}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, }}>{item.customer_name}</Text>
 
 
 
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>{item.service_name}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, }}>{item.service_name}</Text>
 
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1 }}>{item.sub_service}</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10, borderRightWidth: 1 }}>{item.amount}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, }}>{item.sub_service}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10, }}>{item.amount}</Text>
 
           <Text style={{
             fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10,
@@ -328,10 +328,10 @@ const History = ({ navigation }) => {
             color: 'white', fontWeight: 'bold',
             borderRadius: 5
           }}>{item.status}</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderLeftWidth: 1, paddingLeft: 10, borderRightWidth: 1 }}>{item.utr}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, paddingLeft: 10, }}>{item.utr}</Text>
 
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1, paddingLeft: 10 }}>{item.userMobile}</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 250, marginLeft: 10, borderRightWidth: 1 }}>{item.txn_id}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10,  paddingLeft: 10 }}>{item.userMobile}</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 250, marginLeft: 10, }}>{item.txn_id}</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', flex: 1, marginLeft: 10, }}>{item.date}</Text>
 
         </View>
@@ -352,28 +352,28 @@ const History = ({ navigation }) => {
           borderBottomWidth: 1,
           backgroundColor: '#adadad'
         }}>
-          <View style={{ borderRightWidth: 1 }}>
+          <View style={{  }}>
             <Text style={{
               fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10, marginRight: 10
 
             }}>Action</Text>
           </View>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>Name</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10,  }}>Name</Text>
 
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderRightWidth: 1 }}>Service Name</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1 }}>Sub Service</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10,  }}>Service Name</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10,  }}>Sub Service</Text>
 
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10, borderRightWidth: 1 }}>Amount</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 100, marginLeft: 10,  }}>Amount</Text>
 
           <Text style={{
             fontSize: 18, color: 'black', textAlign: 'center', width: 100, marginLeft: 10,
 
           }}>Status</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, borderLeftWidth: 1, paddingLeft: 10, borderRightWidth: 1 }}>Utr no</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 200, marginLeft: 10, paddingLeft: 10,  }}>Utr no</Text>
 
 
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, borderRightWidth: 1, paddingLeft: 10 }}>Mobile</Text>
-          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 250, marginLeft: 10, borderRightWidth: 1 }}>Transaction id</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 150, marginLeft: 10, paddingLeft: 10 }}>Mobile</Text>
+          <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', width: 250, marginLeft: 10,  }}>Transaction id</Text>
           <Text style={{ fontSize: 18, color: 'black', textAlign: 'left', flex: 1, marginLeft: 10, }}>Date</Text>
 
         </View>
