@@ -7,7 +7,6 @@ import qs from 'qs';
 import Toast from 'react-native-toast-message';
 import PhonePePaymentSDK from 'react-native-phonepe-pg'
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import LottieView from 'lottie-react-native';
 
 
 import Base64 from 'react-native-base64'

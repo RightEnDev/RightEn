@@ -18,6 +18,7 @@ import Type1 from '../ServiceForm/Type1';
 import ImagePicker from '../screen/ImagePicker';
 import paymentPage from '../screen/PaymentPage';
 import PaymentPage from '../screen/PaymentPage';
+import ShowDetails from '../screen/ShowDetails';
 
 const Tab = createBottomTabNavigator();
 
@@ -153,7 +154,7 @@ function TabNavigator() {
             );
           }
           else if (route.name === 'Details' || route.name === 'ServiceForm' || route.name === 'Type1' || route.name === 'ImagePicker'
-            || route.name === 'Paymennt'
+            || route.name === 'Paymennt' || route.name === 'ShowDetails'
           ) {
             return (null)
           }
@@ -299,6 +300,27 @@ function TabNavigator() {
           headerShown: false
         }}
       />
+      <Tab.Screen
+        name="ShowDetails"
+        component={ShowDetails}
+        options={{
+          tabBarButton: () => null,
+          headerStyle: { backgroundColor: '#CFF7FF' }, // Customize header color for this tab
+          headerTintColor: '#fff', // Customize header text color
+          headerTitleStyle: { color: 'black', fontSize: 20 },
+          headerTitle: '',
+          headerLeft: () => (
+            <Image
+              source={require('../../assets/images/vertical_righten_without_logo.png')}
+              style={{ width: 150, height: 30, marginRight: 'auto', marginLeft: (screenWidth / 2) - 75 }}
+            />
+          ),
+        }}
+      />
+
+
+
+
       <Tab.Screen
         name="Paymennt"
         component={PaymentPage}
