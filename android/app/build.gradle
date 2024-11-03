@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.righten"
+    namespace "com.righten.customer"
     defaultConfig {
-        applicationId "com.righten"
+        applicationId "com.righten.customer"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

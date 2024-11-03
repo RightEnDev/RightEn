@@ -1,4 +1,4 @@
-package com.righten;
+package com.righten.customer;
 import android.os.Bundle;
 
 import com.facebook.react.ReactActivity;

@@ -1,4 +1,4 @@
-package com.righten;
+package com.righten.customer;
 import com.reactnativecompressor.CompressorPackage;
 import android.app.Application;
 import com.facebook.react.PackageList;
